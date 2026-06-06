@@ -1,9 +1,9 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "eventOS — open-source AI matchmaking for in-person events",
+  title: "eventOS — open source AI matchmaking for in person events",
   description:
-    "Every attendee gets a personal email with their top 5 matches before your networking session starts. Free, MIT-licensed, self-host or get help running it.",
+    "Every attendee gets a personal email with their top 5 matches before your networking session starts. Free, MIT licensed, self host or get help running it.",
 };
 
 const REPO_URL = "https://github.com/rohan2025/eventOS";
@@ -36,12 +36,12 @@ export default function Home() {
         <div className="max-w-3xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#facc15]/20 text-[#0a0a0a]/80 text-xs font-medium mb-6">
             <span className="w-1.5 h-1.5 bg-[#0a0a0a] rounded-full" />
-            Open-source · MIT-licensed · Free forever
+            Open source · MIT licensed · Free forever
           </div>
           <h1 className="text-5xl sm:text-6xl font-bold tracking-tight leading-[1.05] mb-6">
             Your attendees know
             <br />
-            <span className="text-[#0a0a0a]/40">who to meet — before</span>
+            <span className="text-[#0a0a0a]/40">who to meet before</span>
             <br />
             the networking starts.
           </h1>
@@ -71,7 +71,7 @@ export default function Home() {
             </a>
           </div>
           <p className="mt-5 text-[11px] text-[#0a0a0a]/45">
-            Built for in-person events of 50–500 people. Star the repo if you like it.
+            Built for in person events of 50 to 500 people. Star the repo if you like it.
           </p>
         </div>
       </section>
@@ -90,13 +90,13 @@ export default function Home() {
             />
             <Step
               n="2"
-              title="Attendees fill a 60-second form"
+              title="Attendees fill a 60 second form"
               body="Share one link. They tell you what they're looking for and what they can offer."
             />
             <Step
               n="3"
               title="Click Send. Everyone gets matched."
-              body="Mutual-benefit algorithm scores every pair. Each attendee receives an email with their top 5 matches + LinkedIn links."
+              body="Mutual benefit algorithm scores every pair. Each attendee receives an email with their top 5 matches + LinkedIn links."
             />
           </div>
         </div>
@@ -111,7 +111,7 @@ export default function Home() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-10">
             <Feature
               title="Smart matchmaking"
-              body="Scores looking_for ↔ can_offer overlap with bonuses for mutual benefit and category diversity. Same-company filter built in."
+              body="Scores looking_for ↔ can_offer overlap with bonuses for mutual benefit and category diversity. Same company filter built in."
             />
             <Feature
               title="Branded match emails"
@@ -130,8 +130,8 @@ export default function Home() {
               body="Browse upcoming AI / startup / VC events in Bangalore, Bay Area, Singapore — refreshed daily."
             />
             <Feature
-              title="Open-source, MIT-licensed"
-              body="Self-host the whole thing on Vercel + Supabase free tiers. Fork it, tweak it, ship your own event tool."
+              title="Open source, MIT licensed"
+              body="Self host the whole thing on Vercel + Supabase free tiers. Fork it, tweak it, ship your own event tool."
             />
           </div>
         </div>
@@ -144,8 +144,8 @@ export default function Home() {
             Want to use eventOS for your event?
           </h2>
           <p className="text-white/65 mb-8 leading-relaxed">
-            Grab the code on GitHub and self-host it (it&apos;s free), or open an issue and tell me
-            about your event — I&apos;ll help you get it running.
+            Grab the code on GitHub and self host it (it&apos;s free), or open an issue and tell me
+            about your event. I&apos;ll help you get it running.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <a
@@ -172,7 +172,7 @@ export default function Home() {
       <footer className="py-8 px-6 border-t border-[#0a0a0a]/8">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-[#0a0a0a]/50">
-            © {new Date().getFullYear()} eventOS · MIT-licensed
+            © {new Date().getFullYear()} eventOS · MIT licensed
           </p>
           <div className="flex items-center gap-5 text-xs text-[#0a0a0a]/55">
             <a
