@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
+import { useAdminUser } from "../auth-context";
 
 interface EventStat {
   id: string;
@@ -66,6 +67,8 @@ interface EventIdea {
 export default function DashboardPage() {
   const [events, setEvents] = useState<EventStat[]>([]);
   const [profiles, setProfiles] = useState<ProfileRow[]>([]);
+  const adminUser = useAdminUser();
+  const isSuperAdmin = adminUser?.role === "super_admin";
   const [loading, setLoading] = useState(true);
 
   // Sector overrides (profile email → sector)
@@ -79,12 +82,17 @@ export default function DashboardPage() {
   const [addingIdea, setAddingIdea] = useState(false);
 
   useEffect(() => {
-    loadData();
-  }, []);
+    if (adminUser) loadData();
+  }, [adminUser]);
 
   async function loadData() {
+    let eventsQuery = supabase.from("events").select("*").order("event_date", { ascending: false });
+    // Organizers see only their own events. Super-admins see everything.
+    if (adminUser && !isSuperAdmin) {
+      eventsQuery = eventsQuery.eq("owner_id", adminUser.id);
+    }
     const [{ data: eventsData }, { data: profilesData }, { data: ideasData }] = await Promise.all([
-      supabase.from("events").select("*").order("event_date", { ascending: false }),
+      eventsQuery,
       supabase.from("profiles").select("email, name, company, role, what_building, looking_for, can_offer, event_id"),
       supabase.from("event_ideas").select("*").order("created_at", { ascending: false }),
     ]);

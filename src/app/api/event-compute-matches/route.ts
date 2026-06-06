@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getSupabaseAdmin, verifySuperAdmin } from "@/lib/admin-auth";
+import { getSupabaseAdmin, verifyEventOwner } from "@/lib/admin-auth";
 
 interface Profile {
   email: string;
@@ -81,11 +81,6 @@ function computeMatchesForProfile(
 // Body: { adminKey, eventId }
 // Computes matches ONLY for the specified event
 export async function POST(request: Request) {
-  const auth = await verifySuperAdmin(request);
-  if (!auth.authorized) {
-    return NextResponse.json({ error: auth.error }, { status: auth.status });
-  }
-
   const body = await request.json();
   const { eventId } = body;
 
@@ -94,6 +89,11 @@ export async function POST(request: Request) {
       { error: "eventId is required" },
       { status: 400 }
     );
+  }
+
+  const auth = await verifyEventOwner(request, eventId);
+  if (!auth.authorized) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
   }
 
   const supabaseAdmin = getSupabaseAdmin();

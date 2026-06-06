@@ -19,22 +19,7 @@ const SUPER_ADMIN_EMAILS = (process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAILS || "")
 const GOOGLE_OAUTH_ENABLED =
   (process.env.NEXT_PUBLIC_GOOGLE_OAUTH_ENABLED || "").toLowerCase() === "true";
 
-export type AdminRole = "super_admin" | "viewer";
-
-interface AdminUser {
-  email: string;
-  name: string;
-  avatar: string | null;
-  role: AdminRole;
-}
-
-// Context to share admin role with child pages
-import { createContext, useContext } from "react";
-
-const AdminContext = createContext<AdminUser | null>(null);
-export function useAdminUser() {
-  return useContext(AdminContext);
-}
+import { AdminContext, type AdminRole, type AdminUser } from "./auth-context";
 
 export default function AdminLayout({
   children,
@@ -70,7 +55,7 @@ export default function AdminLayout({
       async (event, session) => {
         if (event === "SIGNED_IN" && session?.user) {
           const email = session.user.email || "";
-          const result = await validateAndSetUser(email, session.user.user_metadata);
+          const result = await validateAndSetUser(session.user.id, email, session.user.user_metadata);
           if (!result) {
             await supabase.auth.signOut();
             setError(
@@ -92,7 +77,7 @@ export default function AdminLayout({
 
     if (session?.user) {
       const email = session.user.email || "";
-      const result = await validateAndSetUser(email, session.user.user_metadata);
+      const result = await validateAndSetUser(session.user.id, email, session.user.user_metadata);
       if (!result) {
         await supabase.auth.signOut();
         setError(
@@ -106,6 +91,7 @@ export default function AdminLayout({
   }
 
   async function validateAndSetUser(
+    id: string,
     email: string,
     metadata: Record<string, unknown> | undefined
   ): Promise<boolean> {
@@ -116,26 +102,15 @@ export default function AdminLayout({
       }
     }
 
-    // Check hardcoded list first
-    let role: AdminRole = SUPER_ADMIN_EMAILS.includes(email.toLowerCase())
+    // Multi-tenant: any signed-in user is an organizer with full access to
+    // THEIR events. SUPER_ADMIN_EMAILS is an optional "see all events"
+    // override for self-host owners.
+    const role: AdminRole = SUPER_ADMIN_EMAILS.includes(email.toLowerCase())
       ? "super_admin"
       : "viewer";
 
-    // If not in hardcoded list, check dynamic admins table
-    if (role === "viewer") {
-      try {
-        const { data } = await supabase
-          .from("admins")
-          .select("email")
-          .eq("email", email.toLowerCase())
-          .single();
-        if (data) role = "super_admin";
-      } catch {
-        // Table might not exist yet
-      }
-    }
-
     setUser({
+      id,
       email,
       name: (metadata?.full_name as string) || (metadata?.name as string) || email.split("@")[0],
       avatar: (metadata?.avatar_url as string) || null,

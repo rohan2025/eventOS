@@ -1,11 +1,17 @@
 -- =============================================================================
--- eventOS — Full Database Schema
+-- eventOS — Full Database Schema (multi-tenant)
 -- Run this once in your Supabase SQL Editor to set up the database.
--- Safe to re-run: all statements use IF NOT EXISTS / IF EXISTS where possible.
+-- Safe to re-run: all statements use IF NOT EXISTS / DROP-and-CREATE.
+--
+-- Multi-tenant model: every event has an `owner_id` pointing at the
+-- organizer's auth.users row. RLS scopes events / luma_list / profiles /
+-- matches to the signed-in owner. Attendees never sign in to the dashboard —
+-- they hit `/e/[slug]` which uses service-role API routes that explicitly
+-- scope by event_id (not auth.uid()).
 -- =============================================================================
 
 -- --- events -----------------------------------------------------------------
--- One row per event (e.g. "AI Founder Mixer — March 2026").
+-- One row per event. owner_id = the organizer who created it.
 CREATE TABLE IF NOT EXISTS events (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   slug text UNIQUE NOT NULL,
@@ -17,12 +23,15 @@ CREATE TABLE IF NOT EXISTS events (
   luma_url text,
   podcast_episodes jsonb,
   is_active boolean DEFAULT true,
+  owner_id uuid REFERENCES auth.users(id) ON DELETE CASCADE,
   created_at timestamptz DEFAULT now()
 );
 
+CREATE INDEX IF NOT EXISTS events_owner_id_idx ON events (owner_id);
+
 -- --- luma_list --------------------------------------------------------------
--- Invited guests per event (email + optional LinkedIn). Used to gate
--- the registration form: only emails on this list can register.
+-- Invited guests per event. Gates registration: only emails on this list
+-- can complete the form.
 CREATE TABLE IF NOT EXISTS luma_list (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   email text NOT NULL,
@@ -62,8 +71,8 @@ CREATE TABLE IF NOT EXISTS matches (
 );
 
 -- --- admins -----------------------------------------------------------------
--- Dynamic super-admin list (beyond SUPER_ADMIN_EMAILS env var).
--- Managed via the /admin/settings page.
+-- Legacy: kept for backward compat with the single-tenant self-host pattern.
+-- In multi-tenant mode this is unused — auth.users is the source of truth.
 CREATE TABLE IF NOT EXISTS admins (
   email text PRIMARY KEY,
   added_by text,
@@ -71,7 +80,7 @@ CREATE TABLE IF NOT EXISTS admins (
 );
 
 -- --- admin_otps -------------------------------------------------------------
--- Short-lived OTP codes for verifying new admin invitations.
+-- Short-lived OTP codes for the "invite an admin" flow (legacy single-tenant).
 CREATE TABLE IF NOT EXISTS admin_otps (
   email text PRIMARY KEY,
   code text NOT NULL,
@@ -89,7 +98,7 @@ CREATE TABLE IF NOT EXISTS trending_events_cache (
 );
 
 -- --- event_ideas ------------------------------------------------------------
--- Internal brainstorming board for admins.
+-- Internal brainstorming board. Global (not per-organizer) for now.
 CREATE TABLE IF NOT EXISTS event_ideas (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   text text NOT NULL,
@@ -99,7 +108,6 @@ CREATE TABLE IF NOT EXISTS event_ideas (
 
 -- =============================================================================
 -- Row-level security
--- Public reads are open; writes go through the service role from API routes.
 -- =============================================================================
 
 ALTER TABLE events                  ENABLE ROW LEVEL SECURITY;
@@ -111,41 +119,42 @@ ALTER TABLE admin_otps              ENABLE ROW LEVEL SECURITY;
 ALTER TABLE trending_events_cache   ENABLE ROW LEVEL SECURITY;
 ALTER TABLE event_ideas             ENABLE ROW LEVEL SECURITY;
 
-DO $$
-BEGIN
-  -- events
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='events' AND policyname='events_read') THEN
-    CREATE POLICY events_read ON events FOR SELECT USING (true);
-  END IF;
+-- --- events: public can read; owner can write ------------------------------
+DROP POLICY IF EXISTS events_read         ON events;
+DROP POLICY IF EXISTS events_owner_insert ON events;
+DROP POLICY IF EXISTS events_owner_update ON events;
+DROP POLICY IF EXISTS events_owner_delete ON events;
 
-  -- luma_list
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='luma_list' AND policyname='luma_list_read') THEN
-    CREATE POLICY luma_list_read ON luma_list FOR SELECT USING (true);
-  END IF;
+CREATE POLICY events_read         ON events FOR SELECT USING (true);
+CREATE POLICY events_owner_insert ON events FOR INSERT WITH CHECK (auth.uid() IS NOT NULL AND owner_id = auth.uid());
+CREATE POLICY events_owner_update ON events FOR UPDATE USING (owner_id = auth.uid()) WITH CHECK (owner_id = auth.uid());
+CREATE POLICY events_owner_delete ON events FOR DELETE USING (owner_id = auth.uid());
 
-  -- profiles
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='profiles' AND policyname='profiles_read') THEN
-    CREATE POLICY profiles_read ON profiles FOR SELECT USING (true);
-  END IF;
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='profiles' AND policyname='profiles_insert') THEN
-    CREATE POLICY profiles_insert ON profiles FOR INSERT WITH CHECK (true);
-  END IF;
+-- --- luma_list / profiles / matches: owner of the parent event only --------
+DROP POLICY IF EXISTS luma_list_owner_all ON luma_list;
+DROP POLICY IF EXISTS profiles_owner_all  ON profiles;
+DROP POLICY IF EXISTS matches_owner_all   ON matches;
 
-  -- matches
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='matches' AND policyname='matches_read') THEN
-    CREATE POLICY matches_read ON matches FOR SELECT USING (true);
-  END IF;
+CREATE POLICY luma_list_owner_all ON luma_list
+  FOR ALL
+  USING      (event_id IN (SELECT id FROM events WHERE owner_id = auth.uid()))
+  WITH CHECK (event_id IN (SELECT id FROM events WHERE owner_id = auth.uid()));
 
-  -- trending_events_cache
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='trending_events_cache' AND policyname='trending_events_cache_read') THEN
-    CREATE POLICY trending_events_cache_read ON trending_events_cache FOR SELECT USING (true);
-  END IF;
+CREATE POLICY profiles_owner_all ON profiles
+  FOR ALL
+  USING      (event_id IN (SELECT id FROM events WHERE owner_id = auth.uid()))
+  WITH CHECK (event_id IN (SELECT id FROM events WHERE owner_id = auth.uid()));
 
-  -- event_ideas
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='event_ideas' AND policyname='event_ideas_read') THEN
-    CREATE POLICY event_ideas_read ON event_ideas FOR SELECT USING (true);
-  END IF;
-END $$;
+CREATE POLICY matches_owner_all ON matches
+  FOR ALL
+  USING      (event_id IN (SELECT id FROM events WHERE owner_id = auth.uid()))
+  WITH CHECK (event_id IN (SELECT id FROM events WHERE owner_id = auth.uid()));
+
+-- --- trending_events_cache + event_ideas: public read -----------------------
+DROP POLICY IF EXISTS trending_events_cache_read ON trending_events_cache;
+DROP POLICY IF EXISTS event_ideas_read           ON event_ideas;
+CREATE POLICY trending_events_cache_read ON trending_events_cache FOR SELECT USING (true);
+CREATE POLICY event_ideas_read           ON event_ideas           FOR SELECT USING (true);
 
 -- --- indexes ----------------------------------------------------------------
 CREATE INDEX IF NOT EXISTS luma_list_event_id_idx ON luma_list (event_id);

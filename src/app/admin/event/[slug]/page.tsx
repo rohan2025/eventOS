@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import * as XLSX from "xlsx";
 import { supabase } from "@/lib/supabase";
-import { useAdminUser } from "../../layout";
+import { useAdminUser } from "../../auth-context";
 
 interface PodcastEpisode {
   title: string;

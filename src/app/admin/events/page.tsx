@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { supabase } from "@/lib/supabase";
-import { useAdminUser } from "../layout";
+import { useAdminUser } from "../auth-context";
 
 interface EventRow {
   id: string;
@@ -30,11 +30,16 @@ export default function EventsPage() {
   const [filter, setFilter] = useState<"all" | "active" | "closed">("all");
 
   useEffect(() => {
-    loadEvents();
-  }, []);
+    if (adminUser) loadEvents();
+  }, [adminUser]);
 
   async function loadEvents() {
-    const { data } = await supabase.from("events").select("*").order("event_date", { ascending: false });
+    let query = supabase.from("events").select("*").order("event_date", { ascending: false });
+    // Organizers see only their own events. Super-admins see everything.
+    if (adminUser && !isSuperAdmin) {
+      query = query.eq("owner_id", adminUser.id);
+    }
+    const { data } = await query;
     if (!data) { setLoading(false); return; }
 
     const evts: EventRow[] = [];
@@ -80,11 +85,9 @@ export default function EventsPage() {
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-[#000000] tracking-tight">Events</h1>
         <div className="flex items-center gap-3">
-          {isSuperAdmin && (
-            <Link href="/admin" className="px-4 py-2 bg-[#0a0a0a] text-[#facc15] rounded-lg text-sm font-semibold hover:bg-[#000000] transition-colors">
-              + New Event
-            </Link>
-          )}
+          <Link href="/admin" className="px-4 py-2 bg-[#0a0a0a] text-[#facc15] rounded-lg text-sm font-semibold hover:bg-[#000000] transition-colors">
+            + New Event
+          </Link>
         </div>
       </div>
 

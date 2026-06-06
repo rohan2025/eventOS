@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
-import { useAdminUser } from "../layout";
+import { useAdminUser } from "../auth-context";
 
 interface AdminEntry {
   email: string;

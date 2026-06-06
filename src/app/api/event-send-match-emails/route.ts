@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getSupabaseAdmin, verifySuperAdmin } from "@/lib/admin-auth";
+import { getSupabaseAdmin, verifyEventOwner } from "@/lib/admin-auth";
 import { sendEmail } from "@/lib/email";
 
 interface Profile {
@@ -105,11 +105,6 @@ function buildEmailHtml(
 // POST /api/event-send-match-emails
 // Body: { adminKey, eventId, targetEmail?, dryRun? }
 export async function POST(request: Request) {
-  const auth = await verifySuperAdmin(request);
-  if (!auth.authorized) {
-    return NextResponse.json({ error: auth.error }, { status: auth.status });
-  }
-
   const body = await request.json();
   const { eventId, targetEmail, confirm } = body;
 
@@ -118,6 +113,11 @@ export async function POST(request: Request) {
       { error: "eventId is required" },
       { status: 400 }
     );
+  }
+
+  const auth = await verifyEventOwner(request, eventId);
+  if (!auth.authorized) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
   }
 
   // HARD GUARDRAIL: Default is always dry run.

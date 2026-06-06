@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { supabase } from "@/lib/supabase";
-import { useAdminUser } from "./layout";
+import { useAdminUser } from "./auth-context";
 import * as XLSX from "xlsx";
 
 interface ParsedGuest {
@@ -213,10 +213,15 @@ export default function AdminPage() {
   }
 
   async function loadEvents() {
-    const { data: eventsData } = await supabase
+    let eventsQuery = supabase
       .from("events")
       .select("*")
       .order("created_at", { ascending: false });
+    // Organizers see only their own events. Super-admins see everything.
+    if (adminUser && !isSuperAdmin) {
+      eventsQuery = eventsQuery.eq("owner_id", adminUser.id);
+    }
+    const { data: eventsData } = await eventsQuery;
 
     if (!eventsData) return;
 
@@ -588,7 +593,7 @@ export default function AdminPage() {
             </h2>
             <svg className="w-3.5 h-3.5 text-[#0a0a0a]/0 group-hover:text-[#0a0a0a]/40 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
           </Link>
-          {isSuperAdmin && !showCreate && (
+          {!showCreate && (
             <button
               onClick={() => setShowCreate(true)}
               className="px-4 py-2 bg-[#0a0a0a] text-[#facc15] rounded-lg text-sm font-semibold hover:bg-[#000000] transition-colors"

@@ -1,25 +1,47 @@
 import { NextResponse } from "next/server";
-import { getSupabaseAdmin, verifySuperAdmin } from "@/lib/admin-auth";
+import {
+  getSupabaseAdmin,
+  verifyUser,
+  verifyEventOwner,
+  isSuperAdminEmail,
+} from "@/lib/admin-auth";
 
-// GET /api/events - list all events (public)
-export async function GET() {
+/**
+ * GET /api/events
+ *   - Requires sign-in. Returns events owned by the signed-in user.
+ *   - If the user is in SUPER_ADMIN_EMAILS, returns all events (self-host
+ *     "see everything" mode).
+ */
+export async function GET(request: Request) {
+  const auth = await verifyUser(request);
+  if (!auth.authorized) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
+  }
+
   const supabaseAdmin = getSupabaseAdmin();
-
-  const { data: events, error } = await supabaseAdmin
+  let query = supabaseAdmin
     .from("events")
-    .select("id, slug, name, event_date, location, is_active, image_url, luma_url, created_at")
+    .select(
+      "id, slug, name, event_date, location, is_active, image_url, luma_url, owner_id, created_at"
+    )
     .order("event_date", { ascending: false });
 
+  if (!isSuperAdminEmail(auth.email)) {
+    query = query.eq("owner_id", auth.userId);
+  }
+
+  const { data: events, error } = await query;
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
-
   return NextResponse.json({ events });
 }
 
-// POST /api/events - create a new event (super admin only)
+/**
+ * POST /api/events — any signed-in user can create an event they own.
+ */
 export async function POST(request: Request) {
-  const auth = await verifySuperAdmin(request);
+  const auth = await verifyUser(request);
   if (!auth.authorized) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });
   }
@@ -28,15 +50,18 @@ export async function POST(request: Request) {
   const { slug, name, event_date, location, description, image_url, luma_url } = body;
 
   if (!slug || !name) {
-    return NextResponse.json(
-      { error: "slug and name are required" },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: "slug and name are required" }, { status: 400 });
   }
 
   const supabaseAdmin = getSupabaseAdmin();
 
-  const insertData: Record<string, unknown> = { slug, name, event_date, location };
+  const insertData: Record<string, unknown> = {
+    slug,
+    name,
+    event_date,
+    location,
+    owner_id: auth.userId,
+  };
   if (description) insertData.description = description;
   if (image_url) insertData.image_url = image_url;
   if (luma_url) insertData.luma_url = luma_url;
@@ -50,40 +75,35 @@ export async function POST(request: Request) {
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
-
   return NextResponse.json({ event: data });
 }
 
-// DELETE /api/events - delete an event and its related data (super admin only)
+/**
+ * DELETE /api/events — only the event owner can delete.
+ */
 export async function DELETE(request: Request) {
-  const auth = await verifySuperAdmin(request);
-  if (!auth.authorized) {
-    return NextResponse.json({ error: auth.error }, { status: auth.status });
-  }
-
   const body = await request.json();
   const { eventId } = body;
-
   if (!eventId) {
     return NextResponse.json({ error: "eventId is required" }, { status: 400 });
   }
 
-  const supabaseAdmin = getSupabaseAdmin();
+  const auth = await verifyEventOwner(request, eventId);
+  if (!auth.authorized) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
+  }
 
-  // Delete related data first (matches, profiles, luma_list for this event)
+  const supabaseAdmin = getSupabaseAdmin();
+  // Cascading deletes are configured at the FK level (ON DELETE CASCADE on
+  // profiles / matches / luma_list) — but legacy data may not have those, so
+  // delete dependent rows explicitly to keep this idempotent.
   await supabaseAdmin.from("matches").delete().eq("event_id", eventId);
   await supabaseAdmin.from("profiles").delete().eq("event_id", eventId);
   await supabaseAdmin.from("luma_list").delete().eq("event_id", eventId);
 
-  // Delete the event itself
-  const { error } = await supabaseAdmin
-    .from("events")
-    .delete()
-    .eq("id", eventId);
-
+  const { error } = await supabaseAdmin.from("events").delete().eq("id", eventId);
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
-
   return NextResponse.json({ success: true });
 }

@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
-import { verifySuperAdmin } from "@/lib/admin-auth";
+import { verifyUser } from "@/lib/admin-auth";
 
 // POST /api/fetch-luma-event
 // Body: { url: "https://lu.ma/..." }
 // Returns event details scraped from the Luma page
 export async function POST(request: Request) {
-  const auth = await verifySuperAdmin(request);
+  const auth = await verifyUser(request);
   if (!auth.authorized) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });
   }

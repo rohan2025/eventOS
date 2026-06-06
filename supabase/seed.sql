@@ -3,6 +3,12 @@
 -- Run AFTER supabase/schema.sql to populate the database for local testing.
 -- All emails use the @example.com domain so nothing real is referenced.
 -- Safe to re-run: deletes seed rows by stable IDs before re-inserting.
+--
+-- Note on ownership: these demo events have owner_id = NULL. Under the
+-- multi-tenant RLS policies they're invisible from the organizer dashboard
+-- until claimed. To make a demo event visible to your signed-in user:
+--   UPDATE events SET owner_id = 'YOUR-USER-UUID' WHERE id = '...';
+-- (Run with the service role.)
 -- =============================================================================
 
 -- --- clean previous seed (idempotent) ---------------------------------------
