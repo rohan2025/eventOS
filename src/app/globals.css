@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-inter);
+  --color-neon: #e8ff79;
+  --color-neon-dark: #1d3d0f;
+  --color-neon-bg: #fdfff0;
+  --color-neon-hover: #d4eb65;
+}
+
+@keyframes neon-bar {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+.neon-loader {
+  width: 48px;
+  height: 3px;
+  background: #1d3d0f0d;
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.neon-loader::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 60%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #1d3d0f, #e8ff79);
+  animation: neon-bar 1.2s ease-in-out infinite;
+}
