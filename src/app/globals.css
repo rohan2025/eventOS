@@ -1,22 +1,36 @@
 @import "tailwindcss";
 
+/* ---------------------------------------------------------------------------
+ * eventOS theme tokens
+ *
+ * Default palette: yellow accent on near-black. Replace these four hex values
+ * to re-skin the entire app. The Tailwind utility classes (bg-neon-bg,
+ * text-neon-dark, etc.) read from these tokens, so a single edit here
+ * propagates app-wide.
+ *
+ * Naming history: the variables are still prefixed --color-neon-* because
+ * Tailwind generates class names from them (`bg-neon`, `text-neon-dark`).
+ * Renaming would require a sweep across every component — for now, treat
+ * "neon" as a generic accent role rather than a brand.
+ * ------------------------------------------------------------------------- */
+
 @theme inline {
   --font-sans: var(--font-inter);
-  --color-neon: #e8ff79;
-  --color-neon-dark: #1d3d0f;
-  --color-neon-bg: #fdfff0;
-  --color-neon-hover: #d4eb65;
+  --color-neon: #facc15;        /* bright accent (was lime) */
+  --color-neon-dark: #0a0a0a;   /* dark surface + dark text */
+  --color-neon-bg: #ffffff;     /* page background */
+  --color-neon-hover: #eab308;  /* accent hover state */
 }
 
 @keyframes neon-bar {
-  0% { transform: translateX(-100%); }
+  0%   { transform: translateX(-100%); }
   100% { transform: translateX(200%); }
 }
 
 .neon-loader {
   width: 48px;
   height: 3px;
-  background: #1d3d0f0d;
+  background: #0a0a0a0d;
   border-radius: 999px;
   overflow: hidden;
   position: relative;
@@ -28,6 +42,6 @@
   inset: 0;
   width: 60%;
   border-radius: 999px;
-  background: linear-gradient(90deg, #1d3d0f, #e8ff79);
+  background: linear-gradient(90deg, #0a0a0a, #facc15);
   animation: neon-bar 1.2s ease-in-out infinite;
 }

@@ -201,40 +201,40 @@ export default function DashboardPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {/* Per-event breakdown */}
-        <div className="bg-[#fdfff0] rounded-xl border border-[#1d3d0f]/8 p-5">
-          <h3 className="text-xs font-semibold text-[#1d3d0f]/50 uppercase tracking-wider mb-4">
+        <div className="bg-[#ffffff] rounded-xl border border-[#0a0a0a]/8 p-5">
+          <h3 className="text-xs font-semibold text-[#0a0a0a]/50 uppercase tracking-wider mb-4">
             Event Breakdown
           </h3>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-[#1d3d0f]/8">
-                  <th className="text-left py-2 text-xs font-medium text-[#1d3d0f]/60">Event</th>
-                  <th className="text-right py-2 text-xs font-medium text-[#1d3d0f]/60 px-2">Guests</th>
-                  <th className="text-right py-2 text-xs font-medium text-[#1d3d0f]/60 px-2">Reg.</th>
-                  <th className="text-right py-2 text-xs font-medium text-[#1d3d0f]/60 px-2">Matches</th>
-                  <th className="text-right py-2 text-xs font-medium text-[#1d3d0f]/60 px-2">Conv.</th>
+                <tr className="border-b border-[#0a0a0a]/8">
+                  <th className="text-left py-2 text-xs font-medium text-[#0a0a0a]/60">Event</th>
+                  <th className="text-right py-2 text-xs font-medium text-[#0a0a0a]/60 px-2">Guests</th>
+                  <th className="text-right py-2 text-xs font-medium text-[#0a0a0a]/60 px-2">Reg.</th>
+                  <th className="text-right py-2 text-xs font-medium text-[#0a0a0a]/60 px-2">Matches</th>
+                  <th className="text-right py-2 text-xs font-medium text-[#0a0a0a]/60 px-2">Conv.</th>
                 </tr>
               </thead>
               <tbody>
                 {events.map((ev) => {
                   const pct = ev.guestCount > 0 ? Math.round((ev.profileCount / ev.guestCount) * 100) : 0;
                   return (
-                    <tr key={ev.id} className="border-b border-[#1d3d0f]/5">
+                    <tr key={ev.id} className="border-b border-[#0a0a0a]/5">
                       <td className="py-2.5">
-                        <Link href={`/admin/event/${ev.slug}`} className="text-sm font-medium text-[#1d3d0f] hover:underline">
+                        <Link href={`/admin/event/${ev.slug}`} className="text-sm font-medium text-[#0a0a0a] hover:underline">
                           {ev.name}
                         </Link>
-                        <p className="text-[10px] text-[#1d3d0f]/45">
+                        <p className="text-[10px] text-[#0a0a0a]/45">
                           {ev.event_date ? new Date(ev.event_date).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "TBD"}
                           {ev.location && ` · ${ev.location}`}
                         </p>
                       </td>
-                      <td className="text-right text-sm text-[#1d3d0f]/70 px-2">{ev.guestCount}</td>
-                      <td className="text-right text-sm font-semibold text-[#1d3d0f] px-2">{ev.profileCount}</td>
-                      <td className="text-right text-sm text-[#1d3d0f]/70 px-2">{ev.matchCount}</td>
+                      <td className="text-right text-sm text-[#0a0a0a]/70 px-2">{ev.guestCount}</td>
+                      <td className="text-right text-sm font-semibold text-[#0a0a0a] px-2">{ev.profileCount}</td>
+                      <td className="text-right text-sm text-[#0a0a0a]/70 px-2">{ev.matchCount}</td>
                       <td className="text-right px-2">
-                        <span className="text-xs font-semibold px-1.5 py-0.5 rounded bg-[#e8ff79]/40 text-[#1d3d0f]">{pct}%</span>
+                        <span className="text-xs font-semibold px-1.5 py-0.5 rounded bg-[#facc15]/40 text-[#0a0a0a]">{pct}%</span>
                       </td>
                     </tr>
                   );
@@ -245,8 +245,8 @@ export default function DashboardPage() {
         </div>
 
         {/* Event Ideas */}
-        <div className="bg-[#fdfff0] rounded-xl border border-[#1d3d0f]/8 p-5">
-          <h3 className="text-xs font-semibold text-[#1d3d0f]/50 uppercase tracking-wider mb-4">
+        <div className="bg-[#ffffff] rounded-xl border border-[#0a0a0a]/8 p-5">
+          <h3 className="text-xs font-semibold text-[#0a0a0a]/50 uppercase tracking-wider mb-4">
             Event Ideas
           </h3>
           <div className="flex gap-2 mb-4">
@@ -255,13 +255,13 @@ export default function DashboardPage() {
               value={newIdea}
               onChange={(e) => setNewIdea(e.target.value)}
               placeholder="Add an event idea..."
-              className="flex-1 text-sm px-3 py-2 rounded-lg border border-[#1d3d0f]/10 bg-white outline-none focus:ring-1 focus:ring-[#1d3d0f]/20 placeholder:text-[#1d3d0f]/35"
+              className="flex-1 text-sm px-3 py-2 rounded-lg border border-[#0a0a0a]/10 bg-white outline-none focus:ring-1 focus:ring-[#0a0a0a]/20 placeholder:text-[#0a0a0a]/35"
               onKeyDown={(e) => e.key === "Enter" && handleAddIdea()}
             />
             <button
               onClick={handleAddIdea}
               disabled={addingIdea || !newIdea.trim()}
-              className="px-3 py-2 bg-[#1d3d0f] text-white rounded-lg text-sm font-medium hover:bg-black transition-colors disabled:opacity-40"
+              className="px-3 py-2 bg-[#0a0a0a] text-white rounded-lg text-sm font-medium hover:bg-black transition-colors disabled:opacity-40"
             >
               Add
             </button>
@@ -270,16 +270,16 @@ export default function DashboardPage() {
             <div className="space-y-2 max-h-48 overflow-y-auto">
               {ideas.map((idea) => (
                 <div key={idea.id} className="flex items-start gap-2 group">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#e8ff79] flex-shrink-0 mt-1.5" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#facc15] flex-shrink-0 mt-1.5" />
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm text-[#1d3d0f]/80">{idea.text}</p>
-                    <p className="text-[9px] text-[#1d3d0f]/35 mt-0.5">
+                    <p className="text-sm text-[#0a0a0a]/80">{idea.text}</p>
+                    <p className="text-[9px] text-[#0a0a0a]/35 mt-0.5">
                       {new Date(idea.created_at).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}
                     </p>
                   </div>
                   <button
                     onClick={() => handleDeleteIdea(idea.id)}
-                    className="p-0.5 text-[#1d3d0f]/0 group-hover:text-[#1d3d0f]/30 hover:!text-red-500 transition-colors flex-shrink-0"
+                    className="p-0.5 text-[#0a0a0a]/0 group-hover:text-[#0a0a0a]/30 hover:!text-red-500 transition-colors flex-shrink-0"
                   >
                     <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
                   </button>
@@ -287,7 +287,7 @@ export default function DashboardPage() {
               ))}
             </div>
           ) : (
-            <p className="text-xs text-[#1d3d0f]/40 italic">No ideas yet. Add one above.</p>
+            <p className="text-xs text-[#0a0a0a]/40 italic">No ideas yet. Add one above.</p>
           )}
         </div>
       </div>
@@ -295,11 +295,11 @@ export default function DashboardPage() {
       {/* Charts row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         {/* Demand vs Supply */}
-        <div className="bg-[#fdfff0] rounded-xl border border-[#1d3d0f]/8 p-5">
-          <h3 className="text-xs font-semibold text-[#1d3d0f]/50 uppercase tracking-wider mb-1">Demand vs Supply</h3>
+        <div className="bg-[#ffffff] rounded-xl border border-[#0a0a0a]/8 p-5">
+          <h3 className="text-xs font-semibold text-[#0a0a0a]/50 uppercase tracking-wider mb-1">Demand vs Supply</h3>
           <div className="flex items-center gap-4 mb-4">
-            <div className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-[#1d3d0f]" /><span className="text-[10px] text-[#1d3d0f]/50">Looking for</span></div>
-            <div className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-[#1d3d0f]/30" /><span className="text-[10px] text-[#1d3d0f]/50">Can offer</span></div>
+            <div className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-[#0a0a0a]" /><span className="text-[10px] text-[#0a0a0a]/50">Looking for</span></div>
+            <div className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-[#0a0a0a]/30" /><span className="text-[10px] text-[#0a0a0a]/50">Can offer</span></div>
           </div>
           <div className="space-y-3">
             {allCategories.map((cat) => {
@@ -309,12 +309,12 @@ export default function DashboardPage() {
               return (
                 <div key={cat}>
                   <div className="flex justify-between mb-1">
-                    <span className="text-xs font-medium text-[#1d3d0f]">{cat}</span>
-                    <span className="text-[10px] text-[#1d3d0f]/50">{d} / {s}</span>
+                    <span className="text-xs font-medium text-[#0a0a0a]">{cat}</span>
+                    <span className="text-[10px] text-[#0a0a0a]/50">{d} / {s}</span>
                   </div>
                   <div className="space-y-1">
-                    <div className="h-2.5 bg-[#1d3d0f]/5 rounded overflow-hidden"><div className="h-full bg-[#1d3d0f] rounded" style={{ width: `${(d / max) * 100}%` }} /></div>
-                    <div className="h-2.5 bg-[#1d3d0f]/5 rounded overflow-hidden"><div className="h-full bg-[#1d3d0f]/30 rounded" style={{ width: `${(s / max) * 100}%` }} /></div>
+                    <div className="h-2.5 bg-[#0a0a0a]/5 rounded overflow-hidden"><div className="h-full bg-[#0a0a0a] rounded" style={{ width: `${(d / max) * 100}%` }} /></div>
+                    <div className="h-2.5 bg-[#0a0a0a]/5 rounded overflow-hidden"><div className="h-full bg-[#0a0a0a]/30 rounded" style={{ width: `${(s / max) * 100}%` }} /></div>
                   </div>
                 </div>
               );
@@ -323,25 +323,25 @@ export default function DashboardPage() {
         </div>
 
         {/* Roles */}
-        <div className="bg-[#fdfff0] rounded-xl border border-[#1d3d0f]/8 p-5">
-          <h3 className="text-xs font-semibold text-[#1d3d0f]/50 uppercase tracking-wider mb-4">Roles</h3>
+        <div className="bg-[#ffffff] rounded-xl border border-[#0a0a0a]/8 p-5">
+          <h3 className="text-xs font-semibold text-[#0a0a0a]/50 uppercase tracking-wider mb-4">Roles</h3>
           <div className="space-y-2.5">
             {roles.map(([role, count]) => (
               <div key={role} className="flex items-center gap-3">
-                <span className="text-[11px] text-[#1d3d0f] w-24 truncate flex-shrink-0">{role}</span>
-                <div className="flex-1 h-2.5 bg-[#1d3d0f]/5 rounded overflow-hidden">
-                  <div className="h-full bg-[#1d3d0f] rounded" style={{ width: `${(count / maxRole) * 100}%` }} />
+                <span className="text-[11px] text-[#0a0a0a] w-24 truncate flex-shrink-0">{role}</span>
+                <div className="flex-1 h-2.5 bg-[#0a0a0a]/5 rounded overflow-hidden">
+                  <div className="h-full bg-[#0a0a0a] rounded" style={{ width: `${(count / maxRole) * 100}%` }} />
                 </div>
-                <span className="text-[10px] text-[#1d3d0f]/50 w-6 text-right flex-shrink-0">{count}</span>
+                <span className="text-[10px] text-[#0a0a0a]/50 w-6 text-right flex-shrink-0">{count}</span>
               </div>
             ))}
           </div>
         </div>
 
         {/* Sectors */}
-        <div className="bg-[#fdfff0] rounded-xl border border-[#1d3d0f]/8 p-5">
-          <h3 className="text-xs font-semibold text-[#1d3d0f]/50 uppercase tracking-wider mb-1">Sectors</h3>
-          <p className="text-[9px] text-[#1d3d0f]/35 mb-4">Auto-detected from &ldquo;What are you building?&rdquo; — click to edit</p>
+        <div className="bg-[#ffffff] rounded-xl border border-[#0a0a0a]/8 p-5">
+          <h3 className="text-xs font-semibold text-[#0a0a0a]/50 uppercase tracking-wider mb-1">Sectors</h3>
+          <p className="text-[9px] text-[#0a0a0a]/35 mb-4">Auto-detected from &ldquo;What are you building?&rdquo; — click to edit</p>
           <div className="space-y-2">
             {sectors.map(([sector, count]) => (
               <div key={sector} className="group">
@@ -350,7 +350,7 @@ export default function DashboardPage() {
                     <select
                       value={newSectorValue}
                       onChange={(e) => setNewSectorValue(e.target.value)}
-                      className="flex-1 text-xs px-2 py-1 rounded border border-[#1d3d0f]/15 bg-white outline-none"
+                      className="flex-1 text-xs px-2 py-1 rounded border border-[#0a0a0a]/15 bg-white outline-none"
                     >
                       {allSectorNames.map((s) => (
                         <option key={s} value={s}>{s}</option>
@@ -361,7 +361,7 @@ export default function DashboardPage() {
                       value={newSectorValue}
                       onChange={(e) => setNewSectorValue(e.target.value)}
                       placeholder="Or type new..."
-                      className="flex-1 text-xs px-2 py-1 rounded border border-[#1d3d0f]/15 bg-white outline-none"
+                      className="flex-1 text-xs px-2 py-1 rounded border border-[#0a0a0a]/15 bg-white outline-none"
                     />
                     <button
                       onClick={() => {
@@ -376,25 +376,25 @@ export default function DashboardPage() {
                         setSectorOverrides(newOverrides);
                         setEditingSector(null);
                       }}
-                      className="text-[10px] px-2 py-1 bg-[#1d3d0f] text-white rounded"
+                      className="text-[10px] px-2 py-1 bg-[#0a0a0a] text-white rounded"
                     >
                       Apply
                     </button>
-                    <button onClick={() => setEditingSector(null)} className="text-[10px] text-[#1d3d0f]/40 px-1">Cancel</button>
+                    <button onClick={() => setEditingSector(null)} className="text-[10px] text-[#0a0a0a]/40 px-1">Cancel</button>
                   </div>
                 ) : (
                   <div className="flex items-center gap-3">
                     <button
                       onClick={() => { setEditingSector(sector); setNewSectorValue(sector); }}
-                      className="text-[11px] text-[#1d3d0f] w-28 truncate flex-shrink-0 text-left hover:underline"
+                      className="text-[11px] text-[#0a0a0a] w-28 truncate flex-shrink-0 text-left hover:underline"
                       title="Click to edit sector"
                     >
                       {sector}
                     </button>
-                    <div className="flex-1 h-2.5 bg-[#1d3d0f]/5 rounded overflow-hidden">
-                      <div className="h-full bg-[#1d3d0f] rounded" style={{ width: `${(count / maxSector) * 100}%` }} />
+                    <div className="flex-1 h-2.5 bg-[#0a0a0a]/5 rounded overflow-hidden">
+                      <div className="h-full bg-[#0a0a0a] rounded" style={{ width: `${(count / maxSector) * 100}%` }} />
                     </div>
-                    <span className="text-[10px] text-[#1d3d0f]/50 w-6 text-right flex-shrink-0">{count}</span>
+                    <span className="text-[10px] text-[#0a0a0a]/50 w-6 text-right flex-shrink-0">{count}</span>
                   </div>
                 )}
               </div>
@@ -408,13 +408,13 @@ export default function DashboardPage() {
 
 function StatBox({ label, value, accent, hint }: { label: string; value: number | string; accent?: boolean; hint?: string }) {
   return (
-    <div className={`rounded-xl border p-4 relative group ${accent ? "bg-[#e8ff79]/30 border-[#e8ff79]/50" : "bg-[#fdfff0] border-[#1d3d0f]/8"}`}>
+    <div className={`rounded-xl border p-4 relative group ${accent ? "bg-[#facc15]/30 border-[#facc15]/50" : "bg-[#ffffff] border-[#0a0a0a]/8"}`}>
       <p className="text-2xl font-bold text-[#000000] leading-none">{value}</p>
-      <p className="text-[10px] text-[#1d3d0f]/60 mt-1.5">{label}</p>
+      <p className="text-[10px] text-[#0a0a0a]/60 mt-1.5">{label}</p>
       {hint && (
-        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2.5 py-1.5 bg-[#1d3d0f] text-white text-[10px] rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2.5 py-1.5 bg-[#0a0a0a] text-white text-[10px] rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
           {hint}
-          <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-[#1d3d0f]" />
+          <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-[#0a0a0a]" />
         </div>
       )}
     </div>

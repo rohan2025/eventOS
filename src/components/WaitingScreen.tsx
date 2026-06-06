@@ -12,8 +12,8 @@ export default function WaitingScreen({ profile }: Props) {
     <div className="min-h-screen flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-md text-center">
         <Image
-          src="/neon-logo.png"
-          alt="Neon Fund"
+          src="/logo.svg"
+          alt="eventOS"
           width={56}
           height={56}
           className="mx-auto mb-4"

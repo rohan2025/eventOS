@@ -12,7 +12,14 @@ interface AdminEntry {
   created_at: string;
 }
 
-const CORE_ADMINS = ["rohan@neon.fund", "nansi@neon.fund", "shikhar@neon.fund"];
+// Super admins from env are shown as "Core" (non-removable from the UI —
+// they're env-configured, not DB-managed). All other admins come from
+// the `admins` table and can be removed.
+const CORE_ADMINS = (process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAILS || "")
+  .split(",")
+  .map((e) => e.trim().toLowerCase())
+  .filter(Boolean);
+const ALLOWED_DOMAIN = (process.env.NEXT_PUBLIC_ALLOWED_ADMIN_DOMAIN || "").toLowerCase().trim();
 
 type OtpStep = "idle" | "sending" | "sent" | "verifying";
 
@@ -203,14 +210,14 @@ export default function SettingsPage() {
       <h1 className="text-2xl font-bold text-[#000000] tracking-tight mb-1">
         Settings
       </h1>
-      <p className="text-sm text-[#1d3d0f]/60 mb-8">
+      <p className="text-sm text-[#0a0a0a]/60 mb-8">
         Manage who has admin access to the Event Dashboard
       </p>
 
       {/* ── Admin list ── */}
       <section className="mb-8">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xs font-semibold text-[#1d3d0f]/50 uppercase tracking-wider">
+          <h2 className="text-xs font-semibold text-[#0a0a0a]/50 uppercase tracking-wider">
             Team ({allAdmins.length})
           </h2>
         </div>
@@ -220,18 +227,18 @@ export default function SettingsPage() {
             <div className="neon-loader" />
           </div>
         ) : (
-          <div className="bg-[#ffffff] rounded-2xl border border-[#1d3d0f]/8 overflow-hidden divide-y divide-[#1d3d0f]/5">
+          <div className="bg-[#ffffff] rounded-2xl border border-[#0a0a0a]/8 overflow-hidden divide-y divide-[#0a0a0a]/5">
             {allAdmins.map((admin) => (
               <div
                 key={admin.email}
-                className="flex items-center justify-between py-3.5 px-5 hover:bg-[#fdfff0]/50 transition-colors"
+                className="flex items-center justify-between py-3.5 px-5 hover:bg-[#ffffff]/50 transition-colors"
               >
                 <div className="flex items-center gap-3 min-w-0">
                   <div
                     className={`w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold flex-shrink-0 ${
                       admin.isCore
-                        ? "bg-[#1d3d0f] text-[#e8ff79]"
-                        : "bg-[#e8ff79] text-[#1d3d0f]"
+                        ? "bg-[#0a0a0a] text-[#facc15]"
+                        : "bg-[#facc15] text-[#0a0a0a]"
                     }`}
                   >
                     {admin.email.charAt(0).toUpperCase()}
@@ -240,7 +247,7 @@ export default function SettingsPage() {
                     <p className="text-sm font-medium text-[#000000] truncate">
                       {admin.email}
                     </p>
-                    <p className="text-[10px] text-[#1d3d0f]/50">
+                    <p className="text-[10px] text-[#0a0a0a]/50">
                       {admin.isCore
                         ? "Core admin"
                         : admin.added_by
@@ -255,13 +262,13 @@ export default function SettingsPage() {
                 </div>
 
                 {admin.isCore ? (
-                  <span className="text-[9px] px-2 py-0.5 rounded-md bg-[#1d3d0f]/6 text-[#1d3d0f]/55 font-medium flex-shrink-0">
+                  <span className="text-[9px] px-2 py-0.5 rounded-md bg-[#0a0a0a]/6 text-[#0a0a0a]/55 font-medium flex-shrink-0">
                     Core
                   </span>
                 ) : (
                   <button
                     onClick={() => handleRemoveAdmin(admin.email)}
-                    className="text-[11px] text-[#1d3d0f]/40 hover:text-red-500 transition-colors font-medium flex-shrink-0"
+                    className="text-[11px] text-[#0a0a0a]/40 hover:text-red-500 transition-colors font-medium flex-shrink-0"
                   >
                     Remove
                   </button>
@@ -274,11 +281,11 @@ export default function SettingsPage() {
 
       {/* ── Add admin with OTP ── */}
       <section className="mb-10">
-        <h2 className="text-xs font-semibold text-[#1d3d0f]/50 uppercase tracking-wider mb-4">
+        <h2 className="text-xs font-semibold text-[#0a0a0a]/50 uppercase tracking-wider mb-4">
           Add Admin
         </h2>
 
-        <div className="bg-[#ffffff] rounded-2xl border border-[#1d3d0f]/8 p-5">
+        <div className="bg-[#ffffff] rounded-2xl border border-[#0a0a0a]/8 p-5">
           {/* Success message */}
           {adminSuccess && (
             <div className="mb-4 flex items-center gap-2 py-2.5 px-4 rounded-xl bg-green-50 border border-green-200">
@@ -292,8 +299,10 @@ export default function SettingsPage() {
           {/* Step 1: Enter email */}
           {otpStep === "idle" || otpStep === "sending" ? (
             <div>
-              <p className="text-sm text-[#1d3d0f]/60 mb-3">
-                Enter the @neon.fund email. A verification code will be sent to confirm.
+              <p className="text-sm text-[#0a0a0a]/60 mb-3">
+                {ALLOWED_DOMAIN
+                  ? `Enter an @${ALLOWED_DOMAIN} email. A verification code will be sent to confirm.`
+                  : "Enter the new admin's email. A verification code will be sent to confirm."}
               </p>
               <div className="flex gap-2">
                 <input
@@ -303,18 +312,18 @@ export default function SettingsPage() {
                     setNewAdminEmail(e.target.value);
                     setAdminError("");
                   }}
-                  placeholder="name@neon.fund"
+                  placeholder={ALLOWED_DOMAIN ? `name@${ALLOWED_DOMAIN}` : "name@example.com"}
                   disabled={otpStep === "sending"}
-                  className="flex-1 px-4 py-2.5 rounded-xl border border-[#1d3d0f]/10 text-sm bg-[#ffffff] placeholder:text-[#1d3d0f]/60 focus:outline-none focus:border-[#1d3d0f]/30 transition-colors disabled:opacity-50"
+                  className="flex-1 px-4 py-2.5 rounded-xl border border-[#0a0a0a]/10 text-sm bg-[#ffffff] placeholder:text-[#0a0a0a]/60 focus:outline-none focus:border-[#0a0a0a]/30 transition-colors disabled:opacity-50"
                 />
                 <button
                   onClick={handleSendOtp}
                   disabled={otpStep === "sending" || !newAdminEmail.trim() || !newAdminEmail.includes("@")}
-                  className="px-5 py-2.5 bg-[#1d3d0f] text-[#e8ff79] rounded-xl text-sm font-semibold hover:bg-[#000000] transition-colors disabled:opacity-30 whitespace-nowrap"
+                  className="px-5 py-2.5 bg-[#0a0a0a] text-[#facc15] rounded-xl text-sm font-semibold hover:bg-[#000000] transition-colors disabled:opacity-30 whitespace-nowrap"
                 >
                   {otpStep === "sending" ? (
                     <span className="flex items-center gap-2">
-                      <span className="w-3 h-3 border-2 border-[#e8ff79]/30 border-t-[#e8ff79] rounded-full animate-spin" />
+                      <span className="w-3 h-3 border-2 border-[#facc15]/30 border-t-[#facc15] rounded-full animate-spin" />
                       Sending...
                     </span>
                   ) : (
@@ -327,17 +336,17 @@ export default function SettingsPage() {
             /* Step 2: Enter OTP */
             <div>
               <div className="flex items-center justify-between mb-1">
-                <p className="text-sm text-[#1d3d0f]/60">
+                <p className="text-sm text-[#0a0a0a]/60">
                   Code sent to <span className="font-medium text-[#000000]">{newAdminEmail}</span>
                 </p>
                 <button
                   onClick={resetAddFlow}
-                  className="text-[11px] text-[#1d3d0f]/50 hover:text-[#1d3d0f] transition-colors"
+                  className="text-[11px] text-[#0a0a0a]/50 hover:text-[#0a0a0a] transition-colors"
                 >
                   Cancel
                 </button>
               </div>
-              <p className="text-xs text-[#1d3d0f]/50 mb-5">
+              <p className="text-xs text-[#0a0a0a]/50 mb-5">
                 Ask them to check their email and share the 6-digit code
               </p>
 
@@ -355,7 +364,7 @@ export default function SettingsPage() {
                     onKeyDown={(e) => handleOtpKeyDown(i, e)}
                     onPaste={i === 0 ? handleOtpPaste : undefined}
                     disabled={otpStep === "verifying"}
-                    className="w-12 h-14 text-center text-xl font-bold text-[#1d3d0f] bg-[#fdfff0] border-2 border-[#1d3d0f]/10 rounded-xl focus:outline-none focus:border-[#1d3d0f]/40 transition-colors disabled:opacity-50"
+                    className="w-12 h-14 text-center text-xl font-bold text-[#0a0a0a] bg-[#ffffff] border-2 border-[#0a0a0a]/10 rounded-xl focus:outline-none focus:border-[#0a0a0a]/40 transition-colors disabled:opacity-50"
                   />
                 ))}
               </div>
@@ -363,11 +372,11 @@ export default function SettingsPage() {
               <button
                 onClick={handleVerifyOtp}
                 disabled={otpStep === "verifying" || otpCode.join("").length !== 6}
-                className="w-full py-2.5 bg-[#1d3d0f] text-[#e8ff79] rounded-xl text-sm font-semibold hover:bg-[#000000] transition-colors disabled:opacity-30"
+                className="w-full py-2.5 bg-[#0a0a0a] text-[#facc15] rounded-xl text-sm font-semibold hover:bg-[#000000] transition-colors disabled:opacity-30"
               >
                 {otpStep === "verifying" ? (
                   <span className="flex items-center justify-center gap-2">
-                    <span className="w-3 h-3 border-2 border-[#e8ff79]/30 border-t-[#e8ff79] rounded-full animate-spin" />
+                    <span className="w-3 h-3 border-2 border-[#facc15]/30 border-t-[#facc15] rounded-full animate-spin" />
                     Verifying...
                   </span>
                 ) : (
@@ -378,7 +387,7 @@ export default function SettingsPage() {
               <button
                 onClick={handleSendOtp}
                 disabled={otpStep === "verifying"}
-                className="w-full mt-2 py-2 text-[11px] text-[#1d3d0f]/50 hover:text-[#1d3d0f]/80 transition-colors"
+                className="w-full mt-2 py-2 text-[11px] text-[#0a0a0a]/50 hover:text-[#0a0a0a]/80 transition-colors"
               >
                 Resend code
               </button>
@@ -393,12 +402,12 @@ export default function SettingsPage() {
 
       {/* ── Roles ── */}
       <section>
-        <h2 className="text-xs font-semibold text-[#1d3d0f]/50 uppercase tracking-wider mb-4">
+        <h2 className="text-xs font-semibold text-[#0a0a0a]/50 uppercase tracking-wider mb-4">
           Roles
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div className="bg-[#ffffff] rounded-2xl border border-[#1d3d0f]/8 p-5">
-            <span className="inline-block text-[10px] px-2.5 py-1 rounded-lg font-bold bg-[#e8ff79] text-[#1d3d0f] mb-3">
+          <div className="bg-[#ffffff] rounded-2xl border border-[#0a0a0a]/8 p-5">
+            <span className="inline-block text-[10px] px-2.5 py-1 rounded-lg font-bold bg-[#facc15] text-[#0a0a0a] mb-3">
               Admin
             </span>
             <ul className="space-y-2">
@@ -409,8 +418,8 @@ export default function SettingsPage() {
                 "Send match emails",
                 "Manage team access",
               ].map((item) => (
-                <li key={item} className="text-xs text-[#1d3d0f]/50 flex items-center gap-2">
-                  <svg className="w-3 h-3 text-[#1d3d0f]/45 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <li key={item} className="text-xs text-[#0a0a0a]/50 flex items-center gap-2">
+                  <svg className="w-3 h-3 text-[#0a0a0a]/45 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
                   {item}
@@ -418,8 +427,8 @@ export default function SettingsPage() {
               ))}
             </ul>
           </div>
-          <div className="bg-[#ffffff] rounded-2xl border border-[#1d3d0f]/8 p-5">
-            <span className="inline-block text-[10px] px-2.5 py-1 rounded-lg font-bold bg-[#1d3d0f]/6 text-[#1d3d0f]/55 mb-3">
+          <div className="bg-[#ffffff] rounded-2xl border border-[#0a0a0a]/8 p-5">
+            <span className="inline-block text-[10px] px-2.5 py-1 rounded-lg font-bold bg-[#0a0a0a]/6 text-[#0a0a0a]/55 mb-3">
               Viewer
             </span>
             <ul className="space-y-2">
@@ -430,8 +439,8 @@ export default function SettingsPage() {
                 "View match results",
                 "Read-only access",
               ].map((item) => (
-                <li key={item} className="text-xs text-[#1d3d0f]/50 flex items-center gap-2">
-                  <svg className="w-3 h-3 text-[#1d3d0f]/30 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <li key={item} className="text-xs text-[#0a0a0a]/50 flex items-center gap-2">
+                  <svg className="w-3 h-3 text-[#0a0a0a]/30 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
                   {item}
@@ -440,8 +449,10 @@ export default function SettingsPage() {
             </ul>
           </div>
         </div>
-        <p className="text-[11px] text-[#1d3d0f]/40 mt-3">
-          Any @neon.fund Google account can sign in as a viewer. Only admins can modify data.
+        <p className="text-[11px] text-[#0a0a0a]/40 mt-3">
+          {ALLOWED_DOMAIN
+            ? `Any @${ALLOWED_DOMAIN} Google account can sign in as a viewer. Only admins can modify data.`
+            : "Any signed-in Google account can view. Only admins can modify data."}
         </p>
       </section>
     </div>

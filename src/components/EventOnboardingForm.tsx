@@ -198,8 +198,8 @@ export default function EventOnboardingForm({ eventId, eventName, onComplete }: 
         <div className="w-full max-w-md">
           <div className="text-center mb-6 sm:mb-8">
             <Image
-              src="/neon-logo.png"
-              alt="Neon Fund"
+              src="/logo.svg"
+              alt="eventOS"
               width={56}
               height={56}
               className="mx-auto mb-3"
@@ -280,12 +280,12 @@ export default function EventOnboardingForm({ eventId, eventName, onComplete }: 
         <div className="flex items-center justify-between mb-4 sm:mb-6 bg-white rounded-2xl px-4 py-3 border border-neon-dark/10 shadow-sm">
           <div className="flex items-center gap-2">
             <Image
-              src="/neon-logo.png"
-              alt="Neon Fund"
+              src="/logo.svg"
+              alt="eventOS"
               width={32}
               height={32}
             />
-            <span className="text-sm font-semibold text-neon-dark">Neon Fund</span>
+            <span className="text-sm font-semibold text-neon-dark">eventOS</span>
           </div>
           <div className="text-right">
             <h1 className="text-base sm:text-lg font-bold tracking-tight text-neon-dark leading-tight">

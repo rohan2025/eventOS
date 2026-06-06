@@ -1,7 +1,9 @@
 {
-  "name": "event-matchmaking",
+  "name": "eventos",
   "version": "0.1.0",
   "private": true,
+  "description": "AI-powered matchmaking platform for in-person networking events.",
+  "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

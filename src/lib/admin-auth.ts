@@ -1,8 +1,14 @@
 import { createClient } from "@supabase/supabase-js";
 
-// Hardcoded fallback — always have access even if DB table doesn't exist yet
-const SUPER_ADMIN_EMAILS = ["rohan@neon.fund", "nansi@neon.fund", "shikhar@neon.fund"];
-const ALLOWED_DOMAIN = "neon.fund";
+// Config from env. Both vars are optional:
+//  - If ALLOWED_ADMIN_DOMAIN is empty, any signed-in Google account can pass.
+//  - If SUPER_ADMIN_EMAILS is empty, only the `admins` DB table grants
+//    super-admin; all other signed-in users are read-only viewers.
+const ALLOWED_DOMAIN = (process.env.ALLOWED_ADMIN_DOMAIN || "").toLowerCase().trim();
+const SUPER_ADMIN_EMAILS = (process.env.SUPER_ADMIN_EMAILS || "")
+  .split(",")
+  .map((e) => e.trim().toLowerCase())
+  .filter(Boolean);
 
 export function getSupabaseAdmin() {
   return createClient(
@@ -13,15 +19,13 @@ export function getSupabaseAdmin() {
 
 /**
  * Check if an email is a super admin.
- * Checks hardcoded list first, then falls back to `admins` table in Supabase.
+ * Checks env-configured list first, then falls back to `admins` table.
  */
 export async function isAdminEmail(email: string): Promise<boolean> {
   const lower = email.toLowerCase();
 
-  // Hardcoded list always works
   if (SUPER_ADMIN_EMAILS.includes(lower)) return true;
 
-  // Check dynamic admins table
   try {
     const supabaseAdmin = getSupabaseAdmin();
     const { data } = await supabaseAdmin
@@ -31,7 +35,6 @@ export async function isAdminEmail(email: string): Promise<boolean> {
       .single();
     return !!data;
   } catch {
-    // Table might not exist yet — that's fine
     return false;
   }
 }
@@ -39,7 +42,6 @@ export async function isAdminEmail(email: string): Promise<boolean> {
 /**
  * Verify the request is from an authenticated super admin.
  * Expects Authorization: Bearer <supabase_access_token> header.
- * Checks both hardcoded list and `admins` table.
  */
 export async function verifySuperAdmin(request: Request): Promise<
   | { authorized: true; email: string }
@@ -59,9 +61,15 @@ export async function verifySuperAdmin(request: Request): Promise<
     return { authorized: false, error: "Invalid or expired token", status: 401 };
   }
 
-  const domain = user.email.split("@")[1]?.toLowerCase();
-  if (domain !== ALLOWED_DOMAIN) {
-    return { authorized: false, error: "Access restricted to @neon.fund accounts", status: 403 };
+  if (ALLOWED_DOMAIN) {
+    const domain = user.email.split("@")[1]?.toLowerCase();
+    if (domain !== ALLOWED_DOMAIN) {
+      return {
+        authorized: false,
+        error: `Access restricted to @${ALLOWED_DOMAIN} accounts`,
+        status: 403,
+      };
+    }
   }
 
   const admin = await isAdminEmail(user.email);

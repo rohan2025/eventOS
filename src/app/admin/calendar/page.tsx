@@ -107,15 +107,15 @@ export default function CalendarPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Large calendar */}
-        <div className="lg:col-span-2 bg-white rounded-xl border border-[#1d3d0f]/8 p-6">
+        <div className="lg:col-span-2 bg-white rounded-xl border border-[#0a0a0a]/8 p-6">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-lg font-bold text-[#000000]">{monthLabel}</h2>
             <div className="flex items-center gap-2">
-              <button onClick={() => setCurrentDate(new Date(year, month - 1, 1))} className="p-1.5 rounded-md hover:bg-[#1d3d0f]/5 text-[#1d3d0f]/50 hover:text-[#1d3d0f] transition-colors">
+              <button onClick={() => setCurrentDate(new Date(year, month - 1, 1))} className="p-1.5 rounded-md hover:bg-[#0a0a0a]/5 text-[#0a0a0a]/50 hover:text-[#0a0a0a] transition-colors">
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
               </button>
-              <button onClick={() => setCurrentDate(new Date())} className="text-xs px-2.5 py-1 rounded-md text-[#1d3d0f]/60 hover:text-[#1d3d0f] hover:bg-[#1d3d0f]/5 transition-colors">Today</button>
-              <button onClick={() => setCurrentDate(new Date(year, month + 1, 1))} className="p-1.5 rounded-md hover:bg-[#1d3d0f]/5 text-[#1d3d0f]/50 hover:text-[#1d3d0f] transition-colors">
+              <button onClick={() => setCurrentDate(new Date())} className="text-xs px-2.5 py-1 rounded-md text-[#0a0a0a]/60 hover:text-[#0a0a0a] hover:bg-[#0a0a0a]/5 transition-colors">Today</button>
+              <button onClick={() => setCurrentDate(new Date(year, month + 1, 1))} className="p-1.5 rounded-md hover:bg-[#0a0a0a]/5 text-[#0a0a0a]/50 hover:text-[#0a0a0a] transition-colors">
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
               </button>
             </div>
@@ -124,7 +124,7 @@ export default function CalendarPage() {
           {/* Day headers */}
           <div className="grid grid-cols-7 mb-2">
             {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
-              <div key={d} className="text-center text-xs font-semibold text-[#1d3d0f]/40 py-2">{d}</div>
+              <div key={d} className="text-center text-xs font-semibold text-[#0a0a0a]/40 py-2">{d}</div>
             ))}
           </div>
 
@@ -142,20 +142,20 @@ export default function CalendarPage() {
                   key={key}
                   className={`min-h-[72px] p-1.5 rounded-lg border transition-colors ${
                     hasEvent
-                      ? "bg-[#1d3d0f] border-[#1d3d0f]"
+                      ? "bg-[#0a0a0a] border-[#0a0a0a]"
                       : isToday
-                        ? "bg-[#e8ff79]/20 border-[#e8ff79]/50"
-                        : "border-transparent hover:bg-[#fdfff0]"
+                        ? "bg-[#facc15]/20 border-[#facc15]/50"
+                        : "border-transparent hover:bg-[#ffffff]"
                   }`}
                 >
                   <span className={`text-xs font-medium block ${
-                    hasEvent ? "text-[#e8ff79]" : isToday ? "text-[#1d3d0f] font-bold" : "text-[#1d3d0f]/50"
+                    hasEvent ? "text-[#facc15]" : isToday ? "text-[#0a0a0a] font-bold" : "text-[#0a0a0a]/50"
                   }`}>
                     {day}
                   </span>
                   {dayEvents.map((ev) => (
                     <Link key={ev.id} href={`/admin/event/${ev.slug}`} className="block mt-0.5">
-                      <span className={`text-[9px] leading-tight block truncate ${hasEvent ? "text-[#e8ff79]/70 hover:text-white" : "text-[#1d3d0f]/60"}`}>
+                      <span className={`text-[9px] leading-tight block truncate ${hasEvent ? "text-[#facc15]/70 hover:text-white" : "text-[#0a0a0a]/60"}`}>
                         {ev.name}
                       </span>
                     </Link>
@@ -169,48 +169,48 @@ export default function CalendarPage() {
         {/* Sidebar — upcoming + past */}
         <div className="space-y-6">
           {/* Upcoming events */}
-          <div className="bg-[#fdfff0] rounded-xl border border-[#1d3d0f]/8 p-5">
-            <h3 className="text-xs font-semibold text-[#1d3d0f]/50 uppercase tracking-wider mb-4">Upcoming Events</h3>
+          <div className="bg-[#ffffff] rounded-xl border border-[#0a0a0a]/8 p-5">
+            <h3 className="text-xs font-semibold text-[#0a0a0a]/50 uppercase tracking-wider mb-4">Upcoming Events</h3>
             {upcomingEvents.length > 0 ? (
               <div className="space-y-3">
                 {upcomingEvents.map((ev) => (
                   <Link key={ev.id} href={`/admin/event/${ev.slug}`} className="flex gap-3 group">
                     {ev.image_url && (
-                      <div className="w-12 h-12 rounded-lg overflow-hidden border border-[#1d3d0f]/8 flex-shrink-0">
+                      <div className="w-12 h-12 rounded-lg overflow-hidden border border-[#0a0a0a]/8 flex-shrink-0">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={ev.image_url} alt="" className="w-full h-full object-cover" />
                       </div>
                     )}
                     <div className="min-w-0">
-                      <p className="text-sm font-semibold text-[#1d3d0f] group-hover:text-[#000000] truncate">{ev.name}</p>
-                      <p className="text-[10px] text-[#1d3d0f]/50 mt-0.5">
+                      <p className="text-sm font-semibold text-[#0a0a0a] group-hover:text-[#000000] truncate">{ev.name}</p>
+                      <p className="text-[10px] text-[#0a0a0a]/50 mt-0.5">
                         {ev.event_date ? new Date(ev.event_date).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "TBD"}
                         {ev.location && ` · ${ev.location}`}
                       </p>
-                      <p className="text-[10px] text-[#1d3d0f]/40 mt-0.5">{ev.profileCount} registered of {ev.guestCount} guests</p>
+                      <p className="text-[10px] text-[#0a0a0a]/40 mt-0.5">{ev.profileCount} registered of {ev.guestCount} guests</p>
                     </div>
                   </Link>
                 ))}
               </div>
             ) : (
-              <p className="text-xs text-[#1d3d0f]/50 italic">No upcoming events</p>
+              <p className="text-xs text-[#0a0a0a]/50 italic">No upcoming events</p>
             )}
           </div>
 
           {/* Past events */}
           {pastEvents.length > 0 && (
-            <div className="bg-[#fdfff0] rounded-xl border border-[#1d3d0f]/8 p-5">
-              <h3 className="text-xs font-semibold text-[#1d3d0f]/50 uppercase tracking-wider mb-4">Past Events</h3>
+            <div className="bg-[#ffffff] rounded-xl border border-[#0a0a0a]/8 p-5">
+              <h3 className="text-xs font-semibold text-[#0a0a0a]/50 uppercase tracking-wider mb-4">Past Events</h3>
               <div className="space-y-2.5">
                 {pastEvents.map((ev) => (
                   <Link key={ev.id} href={`/admin/event/${ev.slug}`} className="flex items-center justify-between group py-1">
                     <div className="min-w-0 mr-3">
-                      <p className="text-xs font-medium text-[#1d3d0f]/70 group-hover:text-[#1d3d0f] truncate">{ev.name}</p>
-                      <p className="text-[10px] text-[#1d3d0f]/40">
+                      <p className="text-xs font-medium text-[#0a0a0a]/70 group-hover:text-[#0a0a0a] truncate">{ev.name}</p>
+                      <p className="text-[10px] text-[#0a0a0a]/40">
                         {ev.event_date ? new Date(ev.event_date).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : ""}
                       </p>
                     </div>
-                    <span className="text-[10px] text-[#1d3d0f]/40 flex-shrink-0">{ev.profileCount} reg.</span>
+                    <span className="text-[10px] text-[#0a0a0a]/40 flex-shrink-0">{ev.profileCount} reg.</span>
                   </Link>
                 ))}
               </div>
@@ -219,16 +219,16 @@ export default function CalendarPage() {
 
           {/* This month */}
           {monthEvents.length > 0 && (
-            <div className="bg-[#fdfff0] rounded-xl border border-[#1d3d0f]/8 p-5">
-              <h3 className="text-xs font-semibold text-[#1d3d0f]/50 uppercase tracking-wider mb-3">
+            <div className="bg-[#ffffff] rounded-xl border border-[#0a0a0a]/8 p-5">
+              <h3 className="text-xs font-semibold text-[#0a0a0a]/50 uppercase tracking-wider mb-3">
                 This Month ({monthEvents.length})
               </h3>
               <div className="space-y-2">
                 {monthEvents.map((ev) => (
                   <Link key={ev.id} href={`/admin/event/${ev.slug}`} className="flex items-center gap-2 group">
-                    <span className="w-2 h-2 rounded-full bg-[#1d3d0f] flex-shrink-0" />
-                    <span className="text-xs text-[#1d3d0f] group-hover:underline truncate">{ev.name}</span>
-                    {ev.is_active && <span className="text-[8px] px-1.5 py-0.5 rounded bg-[#e8ff79] text-[#1d3d0f] font-semibold flex-shrink-0">Active</span>}
+                    <span className="w-2 h-2 rounded-full bg-[#0a0a0a] flex-shrink-0" />
+                    <span className="text-xs text-[#0a0a0a] group-hover:underline truncate">{ev.name}</span>
+                    {ev.is_active && <span className="text-[8px] px-1.5 py-0.5 rounded bg-[#facc15] text-[#0a0a0a] font-semibold flex-shrink-0">Active</span>}
                   </Link>
                 ))}
               </div>

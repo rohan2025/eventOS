@@ -461,10 +461,10 @@ export default function AdminPage() {
         {/* ── Dashboard metrics ── */}
         <section>
           <Link href="/admin/dashboard" className="group inline-flex items-center gap-2 mb-6">
-            <h1 className="text-2xl font-bold text-[#000000] tracking-tight group-hover:text-[#1d3d0f] transition-colors">
+            <h1 className="text-2xl font-bold text-[#000000] tracking-tight group-hover:text-[#0a0a0a] transition-colors">
               Dashboard
             </h1>
-            <svg className="w-4 h-4 text-[#1d3d0f]/0 group-hover:text-[#1d3d0f]/40 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+            <svg className="w-4 h-4 text-[#0a0a0a]/0 group-hover:text-[#0a0a0a]/40 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
           </Link>
 
           {/* Top-level stats */}
@@ -506,16 +506,16 @@ export default function AdminPage() {
           {/* Second row — repeat registrations + per-event breakdown */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
             {/* Repeat registrations card */}
-            <div className="bg-[#fdfff0] rounded-xl border border-[#1d3d0f]/8 p-5">
+            <div className="bg-[#ffffff] rounded-xl border border-[#0a0a0a]/8 p-5">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-xs font-semibold text-[#1d3d0f]/50 uppercase tracking-wider">
+                <h3 className="text-xs font-semibold text-[#0a0a0a]/50 uppercase tracking-wider">
                   Repeat Attendees
                 </h3>
-                <span className="text-xl font-bold text-[#1d3d0f]">
+                <span className="text-xl font-bold text-[#0a0a0a]">
                   {metrics?.repeatRegistrations ?? 0}
                 </span>
               </div>
-              <p className="text-xs text-[#1d3d0f]/60 mb-3">
+              <p className="text-xs text-[#0a0a0a]/60 mb-3">
                 People who registered for more than one event
               </p>
               {metrics && metrics.repeatEmails.length > 0 ? (
@@ -523,23 +523,23 @@ export default function AdminPage() {
                   {metrics.repeatEmails.map((email) => (
                     <div
                       key={email}
-                      className="flex items-center gap-2 text-xs text-[#1d3d0f]/70"
+                      className="flex items-center gap-2 text-xs text-[#0a0a0a]/70"
                     >
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#e8ff79] flex-shrink-0" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#facc15] flex-shrink-0" />
                       <span className="truncate">{email}</span>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p className="text-xs text-[#1d3d0f]/50 italic">
+                <p className="text-xs text-[#0a0a0a]/50 italic">
                   No repeat attendees yet
                 </p>
               )}
             </div>
 
             {/* Per-event conversion breakdown */}
-            <div className="bg-[#fdfff0] rounded-xl border border-[#1d3d0f]/8 p-5">
-              <h3 className="text-xs font-semibold text-[#1d3d0f]/50 uppercase tracking-wider mb-3">
+            <div className="bg-[#ffffff] rounded-xl border border-[#0a0a0a]/8 p-5">
+              <h3 className="text-xs font-semibold text-[#0a0a0a]/50 uppercase tracking-wider mb-3">
                 Conversion by Event
               </h3>
               <div className="space-y-3">
@@ -556,13 +556,13 @@ export default function AdminPage() {
                         <span className="text-xs font-medium text-[#000000] truncate mr-3">
                           {event.name}
                         </span>
-                        <span className="text-xs font-bold text-[#1d3d0f] flex-shrink-0">
+                        <span className="text-xs font-bold text-[#0a0a0a] flex-shrink-0">
                           {pct}%
                         </span>
                       </div>
-                      <div className="w-full h-2 bg-[#1d3d0f]/5 rounded-full overflow-hidden">
+                      <div className="w-full h-2 bg-[#0a0a0a]/5 rounded-full overflow-hidden">
                         <div
-                          className="h-full bg-[#e8ff79] rounded-full transition-all duration-500"
+                          className="h-full bg-[#facc15] rounded-full transition-all duration-500"
                           style={{ width: `${Math.min(pct, 100)}%` }}
                         />
                       </div>
@@ -570,7 +570,7 @@ export default function AdminPage() {
                   );
                 })}
                 {events.length === 0 && (
-                  <p className="text-xs text-[#1d3d0f]/50 italic">
+                  <p className="text-xs text-[#0a0a0a]/50 italic">
                     No events yet
                   </p>
                 )}
@@ -583,15 +583,15 @@ export default function AdminPage() {
       <section>
         <div className="flex items-end justify-between mb-3">
           <Link href="/admin/events" className="group inline-flex items-center gap-2">
-            <h2 className="text-lg font-bold text-[#000000] tracking-tight group-hover:text-[#1d3d0f] transition-colors">
+            <h2 className="text-lg font-bold text-[#000000] tracking-tight group-hover:text-[#0a0a0a] transition-colors">
               Events
             </h2>
-            <svg className="w-3.5 h-3.5 text-[#1d3d0f]/0 group-hover:text-[#1d3d0f]/40 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+            <svg className="w-3.5 h-3.5 text-[#0a0a0a]/0 group-hover:text-[#0a0a0a]/40 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
           </Link>
           {isSuperAdmin && !showCreate && (
             <button
               onClick={() => setShowCreate(true)}
-              className="px-4 py-2 bg-[#1d3d0f] text-[#e8ff79] rounded-lg text-sm font-semibold hover:bg-[#000000] transition-colors"
+              className="px-4 py-2 bg-[#0a0a0a] text-[#facc15] rounded-lg text-sm font-semibold hover:bg-[#000000] transition-colors"
             >
               + New Event
             </button>
@@ -600,9 +600,9 @@ export default function AdminPage() {
 
         {/* Create event form */}
         {showCreate && (
-          <div className="bg-[#ffffff] rounded-xl border border-[#1d3d0f]/10 mb-5 overflow-hidden">
-            <div className="px-5 py-3.5 bg-[#1d3d0f] flex items-center justify-between">
-              <h3 className="text-sm font-semibold text-[#e8ff79]">
+          <div className="bg-[#ffffff] rounded-xl border border-[#0a0a0a]/10 mb-5 overflow-hidden">
+            <div className="px-5 py-3.5 bg-[#0a0a0a] flex items-center justify-between">
+              <h3 className="text-sm font-semibold text-[#facc15]">
                 Create New Event
               </h3>
               <button
@@ -616,7 +616,7 @@ export default function AdminPage() {
             <form onSubmit={handleCreateEvent} className="p-5 space-y-5">
               {/* Luma import */}
               <div>
-                <label className="block text-[11px] font-semibold text-[#1d3d0f]/65 uppercase tracking-wider mb-2">
+                <label className="block text-[11px] font-semibold text-[#0a0a0a]/65 uppercase tracking-wider mb-2">
                   Import from Luma
                 </label>
                 <div className="flex gap-2">
@@ -625,13 +625,13 @@ export default function AdminPage() {
                     value={lumaUrl}
                     onChange={(e) => setLumaUrl(e.target.value)}
                     placeholder="https://lu.ma/your-event"
-                    className="flex-1 px-3 py-2 rounded-lg border border-[#1d3d0f]/10 text-sm bg-[#ffffff] placeholder:text-[#1d3d0f]/60 focus:outline-none focus:border-[#1d3d0f]/35 transition-colors"
+                    className="flex-1 px-3 py-2 rounded-lg border border-[#0a0a0a]/10 text-sm bg-[#ffffff] placeholder:text-[#0a0a0a]/60 focus:outline-none focus:border-[#0a0a0a]/35 transition-colors"
                   />
                   <button
                     type="button"
                     onClick={handleFetchLuma}
                     disabled={fetching || !lumaUrl.trim()}
-                    className="px-4 py-2 bg-[#e8ff79] text-[#1d3d0f] rounded-lg text-sm font-semibold hover:bg-[#e8ff79]/80 transition-colors disabled:opacity-30"
+                    className="px-4 py-2 bg-[#facc15] text-[#0a0a0a] rounded-lg text-sm font-semibold hover:bg-[#facc15]/80 transition-colors disabled:opacity-30"
                   >
                     {fetching ? "..." : "Fetch"}
                   </button>
@@ -640,9 +640,9 @@ export default function AdminPage() {
                   <p className="text-xs text-red-600 mt-1.5">{fetchError}</p>
                 )}
                 {newEvent.name && !fetchError && lumaUrl && (
-                  <div className="mt-2.5 flex items-center gap-3 p-2.5 rounded-lg bg-[#e8ff79]/15 border border-[#e8ff79]/30">
+                  <div className="mt-2.5 flex items-center gap-3 p-2.5 rounded-lg bg-[#facc15]/15 border border-[#facc15]/30">
                     {newEvent.image_url && (
-                      <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 border border-[#1d3d0f]/8">
+                      <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 border border-[#0a0a0a]/8">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={newEvent.image_url}
@@ -655,7 +655,7 @@ export default function AdminPage() {
                       <p className="text-sm font-semibold text-[#000000] truncate">
                         {newEvent.name}
                       </p>
-                      <p className="text-[11px] text-[#1d3d0f]/60">
+                      <p className="text-[11px] text-[#0a0a0a]/60">
                         Imported
                       </p>
                     </div>
@@ -663,12 +663,12 @@ export default function AdminPage() {
                 )}
               </div>
 
-              <div className="border-t border-[#1d3d0f]/5" />
+              <div className="border-t border-[#0a0a0a]/5" />
 
               {/* Fields */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] font-medium text-[#1d3d0f]/65 mb-1">
+                  <label className="block text-[11px] font-medium text-[#0a0a0a]/65 mb-1">
                     Event name <span className="text-red-400">*</span>
                   </label>
                   <input
@@ -679,13 +679,13 @@ export default function AdminPage() {
                     }
                     placeholder="Cybersecurity AI"
                     required
-                    className="w-full px-3 py-2 rounded-lg border border-[#1d3d0f]/10 text-sm bg-[#ffffff] placeholder:text-[#1d3d0f]/60 focus:outline-none focus:border-[#1d3d0f]/35 transition-colors"
+                    className="w-full px-3 py-2 rounded-lg border border-[#0a0a0a]/10 text-sm bg-[#ffffff] placeholder:text-[#0a0a0a]/60 focus:outline-none focus:border-[#0a0a0a]/35 transition-colors"
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-medium text-[#1d3d0f]/65 mb-1">
+                  <label className="block text-[11px] font-medium text-[#0a0a0a]/65 mb-1">
                     Slug <span className="text-red-400">*</span>
-                    <span className="text-[#1d3d0f]/40 ml-1 font-normal">
+                    <span className="text-[#0a0a0a]/40 ml-1 font-normal">
                       /event/...
                     </span>
                   </label>
@@ -702,11 +702,11 @@ export default function AdminPage() {
                     }
                     placeholder="cybersecurity-ai"
                     required
-                    className="w-full px-3 py-2 rounded-lg border border-[#1d3d0f]/10 text-sm font-mono bg-[#ffffff] placeholder:text-[#1d3d0f]/60 placeholder:font-sans focus:outline-none focus:border-[#1d3d0f]/35 transition-colors"
+                    className="w-full px-3 py-2 rounded-lg border border-[#0a0a0a]/10 text-sm font-mono bg-[#ffffff] placeholder:text-[#0a0a0a]/60 placeholder:font-sans focus:outline-none focus:border-[#0a0a0a]/35 transition-colors"
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-medium text-[#1d3d0f]/65 mb-1">
+                  <label className="block text-[11px] font-medium text-[#0a0a0a]/65 mb-1">
                     Date
                   </label>
                   <input
@@ -715,11 +715,11 @@ export default function AdminPage() {
                     onChange={(e) =>
                       setNewEvent({ ...newEvent, event_date: e.target.value })
                     }
-                    className="w-full px-3 py-2 rounded-lg border border-[#1d3d0f]/10 text-sm bg-[#ffffff] focus:outline-none focus:border-[#1d3d0f]/35 transition-colors"
+                    className="w-full px-3 py-2 rounded-lg border border-[#0a0a0a]/10 text-sm bg-[#ffffff] focus:outline-none focus:border-[#0a0a0a]/35 transition-colors"
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-medium text-[#1d3d0f]/65 mb-1">
+                  <label className="block text-[11px] font-medium text-[#0a0a0a]/65 mb-1">
                     Location
                   </label>
                   <input
@@ -729,12 +729,12 @@ export default function AdminPage() {
                       setNewEvent({ ...newEvent, location: e.target.value })
                     }
                     placeholder="Bangalore"
-                    className="w-full px-3 py-2 rounded-lg border border-[#1d3d0f]/10 text-sm bg-[#ffffff] placeholder:text-[#1d3d0f]/60 focus:outline-none focus:border-[#1d3d0f]/35 transition-colors"
+                    className="w-full px-3 py-2 rounded-lg border border-[#0a0a0a]/10 text-sm bg-[#ffffff] placeholder:text-[#0a0a0a]/60 focus:outline-none focus:border-[#0a0a0a]/35 transition-colors"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-[11px] font-medium text-[#1d3d0f]/65 mb-1">
+                <label className="block text-[11px] font-medium text-[#0a0a0a]/65 mb-1">
                   Description
                 </label>
                 <textarea
@@ -744,15 +744,15 @@ export default function AdminPage() {
                   }
                   placeholder="Brief event description..."
                   rows={2}
-                  className="w-full px-3 py-2 rounded-lg border border-[#1d3d0f]/10 text-sm bg-[#ffffff] placeholder:text-[#1d3d0f]/60 focus:outline-none focus:border-[#1d3d0f]/35 resize-none transition-colors"
+                  className="w-full px-3 py-2 rounded-lg border border-[#0a0a0a]/10 text-sm bg-[#ffffff] placeholder:text-[#0a0a0a]/60 focus:outline-none focus:border-[#0a0a0a]/35 resize-none transition-colors"
                 />
               </div>
 
-              <div className="border-t border-[#1d3d0f]/5" />
+              <div className="border-t border-[#0a0a0a]/5" />
 
               {/* File upload */}
               <div>
-                <label className="block text-[11px] font-semibold text-[#1d3d0f]/65 uppercase tracking-wider mb-2">
+                <label className="block text-[11px] font-semibold text-[#0a0a0a]/65 uppercase tracking-wider mb-2">
                   Guest List
                 </label>
 
@@ -761,18 +761,18 @@ export default function AdminPage() {
                   <div
                     onDragOver={(e) => {
                       e.preventDefault();
-                      e.currentTarget.classList.add("border-[#1d3d0f]/30", "bg-[#e8ff79]/10");
+                      e.currentTarget.classList.add("border-[#0a0a0a]/30", "bg-[#facc15]/10");
                     }}
                     onDragLeave={(e) => {
-                      e.currentTarget.classList.remove("border-[#1d3d0f]/30", "bg-[#e8ff79]/10");
+                      e.currentTarget.classList.remove("border-[#0a0a0a]/30", "bg-[#facc15]/10");
                     }}
                     onDrop={(e) => {
                       e.preventDefault();
-                      e.currentTarget.classList.remove("border-[#1d3d0f]/30", "bg-[#e8ff79]/10");
+                      e.currentTarget.classList.remove("border-[#0a0a0a]/30", "bg-[#facc15]/10");
                       const file = e.dataTransfer.files[0];
                       if (file) handleFileUpload(file);
                     }}
-                    className="border-2 border-dashed border-[#1d3d0f]/12 rounded-lg p-8 text-center transition-colors cursor-pointer hover:border-[#1d3d0f]/20"
+                    className="border-2 border-dashed border-[#0a0a0a]/12 rounded-lg p-8 text-center transition-colors cursor-pointer hover:border-[#0a0a0a]/20"
                     onClick={() =>
                       document.getElementById("guest-file-input")?.click()
                     }
@@ -789,7 +789,7 @@ export default function AdminPage() {
                     />
                     <div className="flex flex-col items-center gap-2">
                       <svg
-                        className="w-8 h-8 text-[#1d3d0f]/40"
+                        className="w-8 h-8 text-[#0a0a0a]/40"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -801,27 +801,27 @@ export default function AdminPage() {
                           d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
                         />
                       </svg>
-                      <p className="text-sm font-medium text-[#1d3d0f]/60">
+                      <p className="text-sm font-medium text-[#0a0a0a]/60">
                         Drop file here or{" "}
-                        <span className="text-[#1d3d0f] underline">
+                        <span className="text-[#0a0a0a] underline">
                           browse
                         </span>
                       </p>
-                      <p className="text-[11px] text-[#1d3d0f]/50">
+                      <p className="text-[11px] text-[#0a0a0a]/50">
                         CSV, Excel, TSV — email column auto-detected
                       </p>
                     </div>
                   </div>
                 ) : (
                   /* File loaded - show parsed results */
-                  <div className="rounded-lg border border-[#1d3d0f]/10 overflow-hidden">
+                  <div className="rounded-lg border border-[#0a0a0a]/10 overflow-hidden">
                     {/* Header */}
-                    <div className="px-4 py-2.5 bg-[#fdfff0] border-b border-[#1d3d0f]/6 flex items-center justify-between">
+                    <div className="px-4 py-2.5 bg-[#ffffff] border-b border-[#0a0a0a]/6 flex items-center justify-between">
                       <div className="flex items-center gap-2 min-w-0">
-                        <svg className="w-4 h-4 text-[#1d3d0f]/50 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                        <svg className="w-4 h-4 text-[#0a0a0a]/50 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                         </svg>
-                        <span className="text-xs font-medium text-[#1d3d0f]/60 truncate">
+                        <span className="text-xs font-medium text-[#0a0a0a]/60 truncate">
                           {uploadedFileName}
                         </span>
                       </div>
@@ -834,7 +834,7 @@ export default function AdminPage() {
                           const input = document.getElementById("guest-file-input") as HTMLInputElement;
                           if (input) input.value = "";
                         }}
-                        className="text-[11px] text-[#1d3d0f]/55 hover:text-red-500 transition-colors flex-shrink-0 ml-2"
+                        className="text-[11px] text-[#0a0a0a]/55 hover:text-red-500 transition-colors flex-shrink-0 ml-2"
                       >
                         Remove
                       </button>
@@ -844,21 +844,21 @@ export default function AdminPage() {
                     <div className="px-4 py-3 space-y-2">
                       <div className="flex items-center gap-4">
                         <div className="flex items-center gap-1.5">
-                          <span className="w-2 h-2 rounded-full bg-[#e8ff79]" />
-                          <span className="text-xs text-[#1d3d0f]/70">
+                          <span className="w-2 h-2 rounded-full bg-[#facc15]" />
+                          <span className="text-xs text-[#0a0a0a]/70">
                             <span className="font-bold text-[#000000]">{parsedGuests.length}</span> unique emails
                           </span>
                         </div>
                         <div className="flex items-center gap-1.5">
-                          <span className="w-2 h-2 rounded-full bg-[#1d3d0f]/20" />
-                          <span className="text-xs text-[#1d3d0f]/70">
+                          <span className="w-2 h-2 rounded-full bg-[#0a0a0a]/20" />
+                          <span className="text-xs text-[#0a0a0a]/70">
                             <span className="font-bold text-[#000000]">{parsedGuests.filter((g) => g.linkedin_url).length}</span> with LinkedIn
                           </span>
                         </div>
                       </div>
 
                       {uploadedColumns.length > 0 && (
-                        <p className="text-[11px] text-[#1d3d0f]/50">
+                        <p className="text-[11px] text-[#0a0a0a]/50">
                           Columns found: {uploadedColumns.join(", ")} — extracted email{parsedGuests.some((g) => g.linkedin_url) ? " & LinkedIn" : ""}
                         </p>
                       )}
@@ -868,13 +868,13 @@ export default function AdminPage() {
                         {parsedGuests.slice(0, 5).map((g) => (
                           <span
                             key={g.email}
-                            className="text-[11px] px-2 py-0.5 rounded bg-[#1d3d0f]/5 text-[#1d3d0f]/50 font-mono"
+                            className="text-[11px] px-2 py-0.5 rounded bg-[#0a0a0a]/5 text-[#0a0a0a]/50 font-mono"
                           >
                             {g.email}
                           </span>
                         ))}
                         {parsedGuests.length > 5 && (
-                          <span className="text-[11px] px-2 py-0.5 text-[#1d3d0f]/50">
+                          <span className="text-[11px] px-2 py-0.5 text-[#0a0a0a]/50">
                             +{parsedGuests.length - 5} more
                           </span>
                         )}
@@ -889,7 +889,7 @@ export default function AdminPage() {
                 <button
                   type="submit"
                   disabled={creating || !newEvent.name || !newEvent.slug}
-                  className="px-5 py-2.5 bg-[#1d3d0f] text-[#e8ff79] rounded-lg text-sm font-semibold hover:bg-[#000000] transition-colors disabled:opacity-40"
+                  className="px-5 py-2.5 bg-[#0a0a0a] text-[#facc15] rounded-lg text-sm font-semibold hover:bg-[#000000] transition-colors disabled:opacity-40"
                 >
                   {creating
                     ? "Creating..."
@@ -905,7 +905,7 @@ export default function AdminPage() {
         {/* Active events */}
         {events.filter((e) => e.is_active).length > 0 && (
           <div className="mb-6">
-            <h3 className="text-xs font-semibold text-[#1d3d0f]/50 uppercase tracking-wider mb-3">
+            <h3 className="text-xs font-semibold text-[#0a0a0a]/50 uppercase tracking-wider mb-3">
               Active Now
             </h3>
             <div className="space-y-3">
@@ -921,7 +921,7 @@ export default function AdminPage() {
         {/* Past / closed events */}
         {events.filter((e) => !e.is_active).length > 0 && (
           <div>
-            <h3 className="text-xs font-semibold text-[#1d3d0f]/50 uppercase tracking-wider mb-3">
+            <h3 className="text-xs font-semibold text-[#0a0a0a]/50 uppercase tracking-wider mb-3">
               Past Events
             </h3>
             <div className="space-y-3">
@@ -936,7 +936,7 @@ export default function AdminPage() {
 
         {events.length === 0 && (
           <div className="text-center py-16">
-            <p className="text-sm text-[#1d3d0f]/55">No events yet</p>
+            <p className="text-sm text-[#0a0a0a]/55">No events yet</p>
           </div>
         )}
       </section>
@@ -948,10 +948,10 @@ export default function AdminPage() {
         <div className="sticky top-20 space-y-6">
           <div>
             <Link href="/admin/calendar" className="group inline-flex items-center gap-1.5 mb-3">
-              <h3 className="text-xs font-semibold text-[#1d3d0f]/50 uppercase tracking-wider group-hover:text-[#1d3d0f] transition-colors">
+              <h3 className="text-xs font-semibold text-[#0a0a0a]/50 uppercase tracking-wider group-hover:text-[#0a0a0a] transition-colors">
                 Calendar
               </h3>
-              <svg className="w-3 h-3 text-[#1d3d0f]/0 group-hover:text-[#1d3d0f]/40 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+              <svg className="w-3 h-3 text-[#0a0a0a]/0 group-hover:text-[#0a0a0a]/40 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
             </Link>
             <EventCalendar events={events} />
           </div>
@@ -981,23 +981,23 @@ function MetricCard({
     <div
       className={`rounded-xl border p-4 relative group ${
         accent
-          ? "bg-[#e8ff79]/30 border-[#e8ff79]/50"
-          : "bg-[#fdfff0] border-[#1d3d0f]/8"
+          ? "bg-[#facc15]/30 border-[#facc15]/50"
+          : "bg-[#ffffff] border-[#0a0a0a]/8"
       }`}
     >
       <div className="flex items-start justify-between">
         <div>
           <p className="text-2xl font-bold text-[#000000] leading-none">{value}</p>
-          <p className="text-[11px] text-[#1d3d0f]/60 mt-1.5">{label}</p>
+          <p className="text-[11px] text-[#0a0a0a]/60 mt-1.5">{label}</p>
         </div>
         {icon && (
-          <span className="text-[#1d3d0f]/20">{icon}</span>
+          <span className="text-[#0a0a0a]/20">{icon}</span>
         )}
       </div>
       {hint && (
-        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2.5 py-1.5 bg-[#1d3d0f] text-white text-[10px] rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2.5 py-1.5 bg-[#0a0a0a] text-white text-[10px] rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
           {hint}
-          <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-[#1d3d0f]" />
+          <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-[#0a0a0a]" />
         </div>
       )}
     </div>
@@ -1017,12 +1017,12 @@ function MiniStat({
     <div>
       <p className="text-sm font-bold text-[#000000] leading-none">
         {accent ? (
-          <span className="bg-[#e8ff79] px-1 rounded">{value}</span>
+          <span className="bg-[#facc15] px-1 rounded">{value}</span>
         ) : (
           value
         )}
       </p>
-      <p className="text-[10px] text-[#1d3d0f]/50 mt-0.5">{label}</p>
+      <p className="text-[10px] text-[#0a0a0a]/50 mt-0.5">{label}</p>
     </div>
   );
 }
@@ -1078,7 +1078,7 @@ function EventCalendar({ events }: { events: EventWithStats[] }) {
   });
 
   return (
-    <div className="bg-[#fdfff0] rounded-xl border border-[#1d3d0f]/8 p-4">
+    <div className="bg-[#ffffff] rounded-xl border border-[#0a0a0a]/8 p-4">
       {/* Header: month nav */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-1.5">
@@ -1086,7 +1086,7 @@ function EventCalendar({ events }: { events: EventWithStats[] }) {
           {!(today.getFullYear() === year && today.getMonth() === month) && (
             <button
               onClick={goToday}
-              className="text-[9px] px-1.5 py-0.5 rounded bg-[#1d3d0f]/5 text-[#1d3d0f]/50 hover:text-[#1d3d0f] transition-colors"
+              className="text-[9px] px-1.5 py-0.5 rounded bg-[#0a0a0a]/5 text-[#0a0a0a]/50 hover:text-[#0a0a0a] transition-colors"
             >
               Today
             </button>
@@ -1095,7 +1095,7 @@ function EventCalendar({ events }: { events: EventWithStats[] }) {
         <div className="flex items-center gap-0.5">
           <button
             onClick={prev}
-            className="w-6 h-6 flex items-center justify-center rounded-md hover:bg-[#1d3d0f]/5 transition-colors text-[#1d3d0f]/60 hover:text-[#1d3d0f]"
+            className="w-6 h-6 flex items-center justify-center rounded-md hover:bg-[#0a0a0a]/5 transition-colors text-[#0a0a0a]/60 hover:text-[#0a0a0a]"
           >
             <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -1103,7 +1103,7 @@ function EventCalendar({ events }: { events: EventWithStats[] }) {
           </button>
           <button
             onClick={next}
-            className="w-6 h-6 flex items-center justify-center rounded-md hover:bg-[#1d3d0f]/5 transition-colors text-[#1d3d0f]/60 hover:text-[#1d3d0f]"
+            className="w-6 h-6 flex items-center justify-center rounded-md hover:bg-[#0a0a0a]/5 transition-colors text-[#0a0a0a]/60 hover:text-[#0a0a0a]"
           >
             <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
@@ -1117,7 +1117,7 @@ function EventCalendar({ events }: { events: EventWithStats[] }) {
         {["S", "M", "T", "W", "T", "F", "S"].map((d, i) => (
           <div
             key={`${d}-${i}`}
-            className="text-center text-[9px] font-semibold text-[#1d3d0f]/50 uppercase py-1"
+            className="text-center text-[9px] font-semibold text-[#0a0a0a]/50 uppercase py-1"
           >
             {d}
           </div>
@@ -1141,10 +1141,10 @@ function EventCalendar({ events }: { events: EventWithStats[] }) {
               key={key}
               className={`aspect-square flex flex-col items-center justify-center rounded-md transition-colors ${
                 hasEvent
-                  ? "bg-[#1d3d0f] cursor-default"
+                  ? "bg-[#0a0a0a] cursor-default"
                   : todayCell
-                    ? "bg-[#1d3d0f]/8"
-                    : "hover:bg-[#1d3d0f]/3"
+                    ? "bg-[#0a0a0a]/8"
+                    : "hover:bg-[#0a0a0a]/3"
               }`}
               title={
                 hasEvent
@@ -1155,16 +1155,16 @@ function EventCalendar({ events }: { events: EventWithStats[] }) {
               <span
                 className={`text-[11px] leading-none ${
                   hasEvent
-                    ? "text-[#e8ff79] font-bold"
+                    ? "text-[#facc15] font-bold"
                     : todayCell
-                      ? "text-[#1d3d0f] font-bold"
+                      ? "text-[#0a0a0a] font-bold"
                       : "text-[#000000]/50"
                 }`}
               >
                 {day}
               </span>
               {hasEvent && (
-                <span className="w-1 h-1 rounded-full bg-[#e8ff79] mt-0.5" />
+                <span className="w-1 h-1 rounded-full bg-[#facc15] mt-0.5" />
               )}
             </div>
           );
@@ -1173,19 +1173,19 @@ function EventCalendar({ events }: { events: EventWithStats[] }) {
 
       {/* Events this month */}
       {monthEvents.length > 0 && (
-        <div className="mt-3 pt-3 border-t border-[#1d3d0f]/6 space-y-2">
+        <div className="mt-3 pt-3 border-t border-[#0a0a0a]/6 space-y-2">
           {monthEvents.map((ev) => (
             <Link
               key={ev.id}
               href={`/admin/event/${ev.slug}`}
               className="flex items-center gap-2 group"
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-[#1d3d0f] flex-shrink-0" />
+              <span className="w-1.5 h-1.5 rounded-full bg-[#0a0a0a] flex-shrink-0" />
               <div className="min-w-0 flex-1">
                 <span className="text-[11px] font-medium text-[#000000] group-hover:underline truncate block">
                   {ev.name}
                 </span>
-                <span className="text-[10px] text-[#1d3d0f]/55">
+                <span className="text-[10px] text-[#0a0a0a]/55">
                   {ev.event_date
                     ? new Date(ev.event_date).toLocaleDateString("en-IN", {
                         day: "numeric",
@@ -1195,7 +1195,7 @@ function EventCalendar({ events }: { events: EventWithStats[] }) {
                 </span>
               </div>
               {ev.is_active && (
-                <span className="text-[8px] px-1.5 py-0.5 rounded bg-[#e8ff79] text-[#1d3d0f] font-semibold flex-shrink-0">
+                <span className="text-[8px] px-1.5 py-0.5 rounded bg-[#facc15] text-[#0a0a0a] font-semibold flex-shrink-0">
                   Active
                 </span>
               )}
@@ -1206,8 +1206,8 @@ function EventCalendar({ events }: { events: EventWithStats[] }) {
 
       {/* All events link */}
       {events.length > 0 && monthEvents.length === 0 && (
-        <div className="mt-3 pt-3 border-t border-[#1d3d0f]/6">
-          <p className="text-[10px] text-[#1d3d0f]/50 italic text-center">
+        <div className="mt-3 pt-3 border-t border-[#0a0a0a]/6">
+          <p className="text-[10px] text-[#0a0a0a]/50 italic text-center">
             No events this month
           </p>
         </div>
@@ -1232,11 +1232,11 @@ function EventCalendar({ events }: { events: EventWithStats[] }) {
                 href={`/admin/event/${ev.slug}`}
                 className="flex items-center gap-2 group opacity-50 hover:opacity-80 transition-opacity"
               >
-                <span className="w-1 h-1 rounded-full bg-[#1d3d0f] flex-shrink-0" />
+                <span className="w-1 h-1 rounded-full bg-[#0a0a0a] flex-shrink-0" />
                 <span className="text-[10px] text-[#000000] group-hover:underline truncate">
                   {ev.name}
                 </span>
-                <span className="text-[9px] text-[#1d3d0f]/55 flex-shrink-0">
+                <span className="text-[9px] text-[#0a0a0a]/55 flex-shrink-0">
                   {ev.event_date
                     ? new Date(ev.event_date).toLocaleDateString("en-IN", {
                         day: "numeric",
@@ -1278,8 +1278,8 @@ function EventCard({
         isDeleting ? "opacity-50 pointer-events-none" : ""
       } ${
         highlighted
-          ? "bg-[#ffffff] border-[#e8ff79] shadow-sm hover:shadow-md"
-          : "bg-[#fdfff0] border-[#1d3d0f]/8 hover:border-[#1d3d0f]/15 hover:shadow-sm"
+          ? "bg-[#ffffff] border-[#facc15] shadow-sm hover:shadow-md"
+          : "bg-[#ffffff] border-[#0a0a0a]/8 hover:border-[#0a0a0a]/15 hover:shadow-sm"
       }`}
     >
       <Link
@@ -1289,7 +1289,7 @@ function EventCard({
         <div className="p-5 flex gap-5">
           {/* Image thumbnail */}
           {event.image_url && (
-            <div className="hidden sm:block w-24 h-24 rounded-lg overflow-hidden border border-[#1d3d0f]/8 flex-shrink-0">
+            <div className="hidden sm:block w-24 h-24 rounded-lg overflow-hidden border border-[#0a0a0a]/8 flex-shrink-0">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={event.image_url}
@@ -1303,10 +1303,10 @@ function EventCard({
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
-                <h3 className="text-[15px] font-bold text-[#000000] truncate group-hover:text-[#1d3d0f] transition-colors">
+                <h3 className="text-[15px] font-bold text-[#000000] truncate group-hover:text-[#0a0a0a] transition-colors">
                   {event.name}
                 </h3>
-                <p className="text-xs text-[#1d3d0f]/60 mt-0.5">
+                <p className="text-xs text-[#0a0a0a]/60 mt-0.5">
                   {event.event_date
                     ? new Date(event.event_date).toLocaleDateString("en-IN", {
                         day: "numeric",
@@ -1316,7 +1316,7 @@ function EventCard({
                     : "Date TBD"}
                   {event.location && (
                     <>
-                      <span className="mx-1 text-[#1d3d0f]/30">|</span>
+                      <span className="mx-1 text-[#0a0a0a]/30">|</span>
                       {event.location}
                     </>
                   )}
@@ -1327,7 +1327,7 @@ function EventCard({
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={(e) => e.stopPropagation()}
-                    className="inline-flex items-center gap-1 text-[11px] text-[#1d3d0f]/50 hover:text-[#1d3d0f]/80 transition-colors mt-1"
+                    className="inline-flex items-center gap-1 text-[11px] text-[#0a0a0a]/50 hover:text-[#0a0a0a]/80 transition-colors mt-1"
                   >
                     <Image src="/luma-logo.png" alt="" width={11} height={11} />
                     View on Luma
@@ -1336,7 +1336,7 @@ function EventCard({
               </div>
               <div className="flex items-center gap-2 flex-shrink-0">
                 {highlighted && (
-                  <span className="text-[10px] px-2 py-0.5 rounded font-semibold bg-[#e8ff79] text-[#1d3d0f]">
+                  <span className="text-[10px] px-2 py-0.5 rounded font-semibold bg-[#facc15] text-[#0a0a0a]">
                     Active
                   </span>
                 )}
@@ -1345,7 +1345,7 @@ function EventCard({
                   <button
                     onClick={(e) => { e.preventDefault(); e.stopPropagation(); onDelete(event.id, event.name); }}
                     disabled={isDeleting}
-                    className="p-1 rounded-md opacity-0 group-hover/card:opacity-100 text-[#1d3d0f]/25 hover:!text-red-500 hover:bg-red-50 transition-all"
+                    className="p-1 rounded-md opacity-0 group-hover/card:opacity-100 text-[#0a0a0a]/25 hover:!text-red-500 hover:bg-red-50 transition-all"
                     title="Delete event"
                   >
                     {isDeleting ? (
@@ -1372,7 +1372,7 @@ function EventCard({
           {/* Arrow */}
           <div className="hidden sm:flex items-center flex-shrink-0">
             <svg
-              className="w-4 h-4 text-[#1d3d0f]/20 group-hover/card:text-[#1d3d0f]/50 transition-colors"
+              className="w-4 h-4 text-[#0a0a0a]/20 group-hover/card:text-[#0a0a0a]/50 transition-colors"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -1449,12 +1449,12 @@ function TrendingEvents() {
     return (
       <div>
         <Link href="/admin/trending" className="group inline-flex items-center gap-1.5 mb-3">
-          <h3 className="text-xs font-semibold text-[#1d3d0f]/50 uppercase tracking-wider group-hover:text-[#1d3d0f] transition-colors">
+          <h3 className="text-xs font-semibold text-[#0a0a0a]/50 uppercase tracking-wider group-hover:text-[#0a0a0a] transition-colors">
             Trending Events
           </h3>
-          <svg className="w-3 h-3 text-[#1d3d0f]/0 group-hover:text-[#1d3d0f]/40 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+          <svg className="w-3 h-3 text-[#0a0a0a]/0 group-hover:text-[#0a0a0a]/40 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
         </Link>
-        <div className="bg-[#fdfff0] rounded-xl border border-[#1d3d0f]/8 p-4">
+        <div className="bg-[#ffffff] rounded-xl border border-[#0a0a0a]/8 p-4">
           <div className="flex items-center justify-center py-6">
             <div className="neon-loader" />
           </div>
@@ -1466,15 +1466,15 @@ function TrendingEvents() {
   return (
     <div>
       <Link href="/admin/trending" className="group inline-flex items-center gap-1.5 mb-3">
-        <h3 className="text-xs font-semibold text-[#1d3d0f]/50 uppercase tracking-wider group-hover:text-[#1d3d0f] transition-colors">
+        <h3 className="text-xs font-semibold text-[#0a0a0a]/50 uppercase tracking-wider group-hover:text-[#0a0a0a] transition-colors">
           Trending Events
         </h3>
-        <svg className="w-3 h-3 text-[#1d3d0f]/0 group-hover:text-[#1d3d0f]/40 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+        <svg className="w-3 h-3 text-[#0a0a0a]/0 group-hover:text-[#0a0a0a]/40 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
       </Link>
 
-      <div className="rounded-xl border border-[#1d3d0f]/8 overflow-hidden bg-[#fdfff0]">
+      <div className="rounded-xl border border-[#0a0a0a]/8 overflow-hidden bg-[#ffffff]">
         {/* Region tabs */}
-        <div className="flex border-b border-[#1d3d0f]/6 bg-white">
+        <div className="flex border-b border-[#0a0a0a]/6 bg-white">
           {regionIds.map((id) => {
             const label = regions[id]?.label || id.replace("_", " ");
             const count = regions[id]?.events?.length || 0;
@@ -1485,18 +1485,18 @@ function TrendingEvents() {
                 onClick={() => setActiveRegion(id)}
                 className={`flex-1 py-2 text-[10px] font-semibold transition-colors relative ${
                   isActive
-                    ? "text-[#1d3d0f]"
-                    : "text-[#1d3d0f]/35 hover:text-[#1d3d0f]/60"
+                    ? "text-[#0a0a0a]"
+                    : "text-[#0a0a0a]/35 hover:text-[#0a0a0a]/60"
                 }`}
               >
                 {label === "Bay Area" ? "Bay Area" : label}
                 {count > 0 && (
-                  <span className={`ml-1 ${isActive ? "text-[#1d3d0f]/50" : "text-[#1d3d0f]/25"}`}>
+                  <span className={`ml-1 ${isActive ? "text-[#0a0a0a]/50" : "text-[#0a0a0a]/25"}`}>
                     {count}
                   </span>
                 )}
                 {isActive && (
-                  <span className="absolute bottom-0 left-2 right-2 h-[2px] bg-[#1d3d0f] rounded-full" />
+                  <span className="absolute bottom-0 left-2 right-2 h-[2px] bg-[#0a0a0a] rounded-full" />
                 )}
               </button>
             );
@@ -1505,7 +1505,7 @@ function TrendingEvents() {
 
         {/* Event list */}
         {events.length > 0 ? (
-          <div className="max-h-[480px] overflow-y-auto divide-y divide-[#1d3d0f]/5">
+          <div className="max-h-[480px] overflow-y-auto divide-y divide-[#0a0a0a]/5">
             {events.map((event) => {
               const date = new Date(event.start_at);
               const dayStr = date.toLocaleDateString("en-IN", {
@@ -1524,9 +1524,9 @@ function TrendingEvents() {
                   href={event.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex gap-3 p-3 hover:bg-[#e8ff79]/10 transition-colors group"
+                  className="flex gap-3 p-3 hover:bg-[#facc15]/10 transition-colors group"
                 >
-                  <div className="w-[72px] h-[72px] rounded-lg overflow-hidden flex-shrink-0 bg-[#1d3d0f]/5 border border-[#1d3d0f]/6">
+                  <div className="w-[72px] h-[72px] rounded-lg overflow-hidden flex-shrink-0 bg-[#0a0a0a]/5 border border-[#0a0a0a]/6">
                     {event.cover_url ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
@@ -1535,18 +1535,18 @@ function TrendingEvents() {
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-[#1d3d0f]/5 to-[#e8ff79]/20 flex items-center justify-center">
-                        <svg className="w-4 h-4 text-[#1d3d0f]/20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <div className="w-full h-full bg-gradient-to-br from-[#0a0a0a]/5 to-[#facc15]/20 flex items-center justify-center">
+                        <svg className="w-4 h-4 text-[#0a0a0a]/20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
                         </svg>
                       </div>
                     )}
                   </div>
                   <div className="flex-1 min-w-0 py-0.5">
-                    <p className="text-[12px] font-semibold text-[#1d3d0f] leading-snug line-clamp-2 group-hover:text-[#000000]">
+                    <p className="text-[12px] font-semibold text-[#0a0a0a] leading-snug line-clamp-2 group-hover:text-[#000000]">
                       {event.name}
                     </p>
-                    <p className="text-[10px] text-[#1d3d0f]/50 mt-1.5 truncate">
+                    <p className="text-[10px] text-[#0a0a0a]/50 mt-1.5 truncate">
                       {dayStr}, {timeStr}
                       {event.host_name && ` · ${event.host_name}`}
                     </p>
@@ -1557,14 +1557,14 @@ function TrendingEvents() {
           </div>
         ) : (
           <div className="py-8 text-center">
-            <p className="text-xs text-[#1d3d0f]/40">No events found</p>
+            <p className="text-xs text-[#0a0a0a]/40">No events found</p>
           </div>
         )}
 
         {/* Footer */}
-        <div className="flex items-center justify-between px-3 py-2 border-t border-[#1d3d0f]/5 bg-[#fdfff0]">
+        <div className="flex items-center justify-between px-3 py-2 border-t border-[#0a0a0a]/5 bg-[#ffffff]">
           {lastUpdated && (
-            <span className="text-[8px] text-[#1d3d0f]/35">
+            <span className="text-[8px] text-[#0a0a0a]/35">
               Updated {new Date(lastUpdated).toLocaleTimeString("en-IN", {
                 hour: "numeric",
                 minute: "2-digit",
@@ -1576,7 +1576,7 @@ function TrendingEvents() {
             href={LUMA_DISCOVER_URLS[activeRegion] || "https://lu.ma/discover"}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[9px] text-[#1d3d0f]/50 hover:text-[#1d3d0f] transition-colors"
+            className="text-[9px] text-[#0a0a0a]/50 hover:text-[#0a0a0a] transition-colors"
           >
             View all on Luma
           </a>

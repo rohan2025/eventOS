@@ -484,7 +484,7 @@ export default function EventDashboard({
                 {/* Status indicator */}
                 <span className={`text-[11px] px-2.5 py-1 rounded-full font-semibold flex items-center gap-1.5 ${
                   event.is_active
-                    ? "bg-[#e8ff79]/40 text-neon-dark"
+                    ? "bg-[#facc15]/40 text-neon-dark"
                     : "bg-neon-dark/5 text-neon-dark/55"
                 }`}>
                   <span className={`w-1.5 h-1.5 rounded-full ${event.is_active ? "bg-neon-dark" : "bg-neon-dark/20"}`} />
@@ -1737,7 +1737,7 @@ function EmailsTab({
                     type="text"
                     value={ep.link}
                     onChange={(e) => updateLink(i, e.target.value)}
-                    placeholder="Tracking link (be.neon.fund/...)"
+                    placeholder="Tracking link (https://...)"
                     className="flex-1 text-xs px-2.5 py-1.5 rounded-md border border-neon-dark/10 bg-white outline-none focus:ring-1 focus:ring-neon-dark/20"
                   />
                 </div>
@@ -1838,7 +1838,7 @@ function EmailsTab({
                 type="email"
                 value={testEmail}
                 onChange={(e) => setTestEmail(e.target.value)}
-                placeholder="rohan@neon.fund"
+                placeholder="you@example.com"
                 className="px-3 py-2 rounded-lg border border-neon-dark/15 text-sm w-64 focus:outline-none focus:ring-2 focus:ring-neon-dark/20 bg-white"
               />
               <button
@@ -1869,7 +1869,7 @@ function EmailsTab({
               <button
                 onClick={handleBatchSend}
                 disabled={sendingEmails || matches.length === 0}
-                className="px-4 py-2 bg-neon-dark text-[#e8ff79] rounded-lg text-sm font-semibold hover:bg-black transition-colors disabled:opacity-50"
+                className="px-4 py-2 bg-neon-dark text-[#facc15] rounded-lg text-sm font-semibold hover:bg-black transition-colors disabled:opacity-50"
               >
                 {sendingEmails
                   ? "Sending..."
@@ -1943,7 +1943,7 @@ function DemandSupplyChart({ participants }: { participants: Participant[] }) {
                     <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${
                       gap > 0
                         ? "bg-neon-dark/10 text-neon-dark/70"
-                        : "bg-[#e8ff79]/30 text-neon-dark/50"
+                        : "bg-[#facc15]/30 text-neon-dark/50"
                     }`}>
                       {gap > 0 ? `+${gap} gap` : `${Math.abs(gap)} surplus`}
                     </span>

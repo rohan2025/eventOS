@@ -37,12 +37,15 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Valid email is required" }, { status: 400 });
   }
 
-  const domain = email.split("@")[1]?.toLowerCase();
-  if (domain !== "neon.fund") {
-    return NextResponse.json(
-      { error: "Only @neon.fund emails can be added as admin" },
-      { status: 400 }
-    );
+  const allowedDomain = (process.env.ALLOWED_ADMIN_DOMAIN || "").toLowerCase().trim();
+  if (allowedDomain) {
+    const domain = email.split("@")[1]?.toLowerCase();
+    if (domain !== allowedDomain) {
+      return NextResponse.json(
+        { error: `Only @${allowedDomain} emails can be added as admin` },
+        { status: 400 }
+      );
+    }
   }
 
   const supabaseAdmin = getSupabaseAdmin();

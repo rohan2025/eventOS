@@ -98,15 +98,15 @@ export default function ChatInterface({ profile }: Props) {
         <div className="max-w-3xl mx-auto flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5 min-w-0">
             <Image
-              src="/neon-logo.png"
-              alt="Neon Fund"
+              src="/logo.svg"
+              alt="eventOS"
               width={32}
               height={32}
               className="shrink-0"
             />
             <div className="min-w-0">
               <h1 className="text-base sm:text-lg font-semibold text-neon-dark truncate">
-                Startup Matchmaker
+                eventOS
               </h1>
               <p className="text-xs sm:text-sm text-neon-dark/50 hidden sm:block">
                 Ask me who you should meet today

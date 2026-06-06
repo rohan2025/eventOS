@@ -6,8 +6,15 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 
-const SUPER_ADMIN_EMAILS = ["rohan@neon.fund", "nansi@neon.fund", "shikhar@neon.fund"];
-const ALLOWED_DOMAIN = "neon.fund";
+// Config from env. Both vars are optional:
+//  - If ALLOWED_DOMAIN is empty, any signed-in Google account can pass.
+//  - If SUPER_ADMIN_EMAILS is empty, only the `admins` DB table grants
+//    super-admin; all other signed-in users are read-only viewers.
+const ALLOWED_DOMAIN = (process.env.NEXT_PUBLIC_ALLOWED_ADMIN_DOMAIN || "").toLowerCase().trim();
+const SUPER_ADMIN_EMAILS = (process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAILS || "")
+  .split(",")
+  .map((e) => e.trim().toLowerCase())
+  .filter(Boolean);
 
 export type AdminRole = "super_admin" | "viewer";
 
@@ -45,7 +52,11 @@ export default function AdminLayout({
           const result = await validateAndSetUser(email, session.user.user_metadata);
           if (!result) {
             await supabase.auth.signOut();
-            setError("Access restricted to @neon.fund accounts only.");
+            setError(
+              ALLOWED_DOMAIN
+                ? `Access restricted to @${ALLOWED_DOMAIN} accounts only.`
+                : "Sign-in failed."
+            );
             setLoading(false);
           }
         }
@@ -63,7 +74,11 @@ export default function AdminLayout({
       const result = await validateAndSetUser(email, session.user.user_metadata);
       if (!result) {
         await supabase.auth.signOut();
-        setError("Access restricted to @neon.fund accounts only.");
+        setError(
+          ALLOWED_DOMAIN
+            ? `Access restricted to @${ALLOWED_DOMAIN} accounts only.`
+            : "Sign-in failed."
+        );
       }
     }
     setLoading(false);
@@ -73,9 +88,11 @@ export default function AdminLayout({
     email: string,
     metadata: Record<string, unknown> | undefined
   ): Promise<boolean> {
-    const domain = email.split("@")[1]?.toLowerCase();
-    if (domain !== ALLOWED_DOMAIN) {
-      return false;
+    if (ALLOWED_DOMAIN) {
+      const domain = email.split("@")[1]?.toLowerCase();
+      if (domain !== ALLOWED_DOMAIN) {
+        return false;
+      }
     }
 
     // Check hardcoded list first
@@ -113,9 +130,7 @@ export default function AdminLayout({
       provider: "google",
       options: {
         redirectTo: `${window.location.origin}/admin`,
-        queryParams: {
-          hd: ALLOWED_DOMAIN,
-        },
+        queryParams: ALLOWED_DOMAIN ? { hd: ALLOWED_DOMAIN } : undefined,
       },
     });
 
@@ -144,8 +159,8 @@ export default function AdminLayout({
           <div className="text-center mb-8">
             <div className="inline-block mb-4">
               <Image
-                src="/neon-logo.png"
-                alt="Neon Fund"
+                src="/logo.svg"
+                alt="eventOS"
                 width={48}
                 height={48}
                 className="rounded-lg"
@@ -154,14 +169,14 @@ export default function AdminLayout({
             <h1 className="text-2xl font-bold text-[#000000] tracking-tight">
               Admin Dashboard
             </h1>
-            <p className="text-sm text-[#1d3d0f]/50 mt-1">
+            <p className="text-sm text-[#0a0a0a]/50 mt-1">
               Sign in to manage events
             </p>
           </div>
-          <div className="bg-[#ffffff] rounded-2xl border border-[#1d3d0f]/10 p-6 space-y-4">
+          <div className="bg-[#ffffff] rounded-2xl border border-[#0a0a0a]/10 p-6 space-y-4">
             <button
               onClick={handleGoogleLogin}
-              className="w-full flex items-center justify-center gap-3 py-3 px-4 bg-[#ffffff] border border-[#1d3d0f]/15 rounded-xl text-sm font-medium text-[#000000] hover:bg-[#ffffff] transition-colors"
+              className="w-full flex items-center justify-center gap-3 py-3 px-4 bg-[#ffffff] border border-[#0a0a0a]/15 rounded-xl text-sm font-medium text-[#000000] hover:bg-[#ffffff] transition-colors"
             >
               <svg width="18" height="18" viewBox="0 0 48 48">
                 <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
@@ -171,9 +186,11 @@ export default function AdminLayout({
               </svg>
               Sign in with Google
             </button>
-            <p className="text-[11px] text-center text-[#1d3d0f]/50">
-              Only @neon.fund accounts can access this dashboard
-            </p>
+            {ALLOWED_DOMAIN && (
+              <p className="text-[11px] text-center text-[#0a0a0a]/50">
+                Only @{ALLOWED_DOMAIN} accounts can access this dashboard
+              </p>
+            )}
             {error && (
               <p className="text-sm text-red-600 text-center">{error}</p>
             )}
@@ -199,20 +216,20 @@ export default function AdminLayout({
     <AdminContext.Provider value={user}>
       <div className="min-h-screen bg-[#ffffff]">
         {/* Header */}
-        <header className="sticky top-0 z-50 bg-[#1d3d0f]">
+        <header className="sticky top-0 z-50 bg-[#0a0a0a]">
           <div className="max-w-7xl mx-auto px-5 sm:px-6 h-14 flex items-center justify-between">
             {/* ── Left: Logo + Nav ── */}
             <div className="flex items-center gap-1.5">
               <Link href="/admin" className="flex items-center gap-2.5 mr-2">
                 <Image
-                  src="/neon-logo.png"
-                  alt="Neon Fund"
+                  src="/logo.svg"
+                  alt="eventOS"
                   width={24}
                   height={24}
                   className="rounded"
                 />
-                <span className="font-semibold text-[#e8ff79] text-sm hidden sm:inline">
-                  Neon Fund
+                <span className="font-semibold text-[#facc15] text-sm hidden sm:inline">
+                  eventOS
                 </span>
               </Link>
               <span className="text-[#ffffff]/15 text-xs hidden sm:inline">/</span>
@@ -283,7 +300,7 @@ export default function AdminLayout({
                     className="w-6 h-6 rounded-full"
                   />
                 ) : (
-                  <div className="w-6 h-6 rounded-full bg-[#e8ff79] flex items-center justify-center text-[10px] font-bold text-[#1d3d0f]">
+                  <div className="w-6 h-6 rounded-full bg-[#facc15] flex items-center justify-center text-[10px] font-bold text-[#0a0a0a]">
                     {user.name.charAt(0).toUpperCase()}
                   </div>
                 )}
@@ -293,7 +310,7 @@ export default function AdminLayout({
                 <span
                   className={`text-[10px] px-1.5 py-0.5 rounded font-semibold ${
                     user.role === "super_admin"
-                      ? "bg-[#e8ff79]/20 text-[#e8ff79]"
+                      ? "bg-[#facc15]/20 text-[#facc15]"
                       : "bg-[#ffffff]/10 text-[#ffffff]/50"
                   }`}
                 >
