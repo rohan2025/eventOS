@@ -22,6 +22,15 @@
   --color-neon-hover: #eab308;  /* accent hover state */
 }
 
+/* Tailwind v4 preflight resets `cursor: default` on buttons. Bring back
+ * the conventional pointer for any clickable button, but keep the default
+ * cursor on disabled ones so they read as inert. */
+button:not(:disabled),
+[role="button"]:not(:disabled),
+a[href] {
+  cursor: pointer;
+}
+
 @keyframes neon-bar {
   0%   { transform: translateX(-100%); }
   100% { transform: translateX(200%); }
