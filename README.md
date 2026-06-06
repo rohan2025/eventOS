@@ -6,19 +6,28 @@ Originally built for [Neon Fund](https://neon.fund). Open-source under MIT.
 
 ---
 
-## Deploy in 5 minutes
+## Want to use eventOS for your event?
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FYOUR_GITHUB_USERNAME%2Feventos&env=SUPER_ADMIN_EMAILS,NEXT_PUBLIC_SUPER_ADMIN_EMAILS&envDescription=Set%20both%20to%20your%20email%20address%20%E2%80%94%20that%E2%80%99s%20the%20first%20admin&envLink=https%3A%2F%2Fgithub.com%2FYOUR_GITHUB_USERNAME%2Feventos%2Fblob%2Fmain%2F.env.example&project-name=eventos&repository-name=eventos)
+You have two paths:
 
-> Replace `YOUR_GITHUB_USERNAME` in the button URL above after forking.
+- **Self-host it (free, full control).** Clone the repo, follow the setup below, and you're running on Vercel + Supabase + an SMTP provider for $0.
+- **Want help getting it set up?** [Open an issue](https://github.com/rohan2025/eventOS/issues/new) describing your event (size, date, what you'd like the matchmaking to do) and I'll help you get it running.
 
-Then in your new Vercel project:
+There's no paid hosted version. There's no signup form. The code is the whole product — if you can deploy a Next.js app, you can run an event.
+
+---
+
+## Self-host quickstart
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Frohan2025%2FeventOS&env=SUPER_ADMIN_EMAILS,NEXT_PUBLIC_SUPER_ADMIN_EMAILS&envDescription=Set%20both%20to%20your%20email%20address%20%E2%80%94%20that%E2%80%99s%20the%20first%20admin&envLink=https%3A%2F%2Fgithub.com%2Frohan2025%2FeventOS%2Fblob%2Fmain%2F.env.example&project-name=eventos&repository-name=eventos)
+
+In your new Vercel project:
 
 1. **Add the Supabase integration** — Project → Storage → "Add Marketplace Database" → Supabase. This auto-creates a Supabase project and sets `NEXT_PUBLIC_SUPABASE_URL`, the anon + service role keys, and `POSTGRES_URL_NON_POOLING`.
-2. **Add the Resend integration** — Project → Integrations → Browse Marketplace → Resend. This sets `RESEND_API_KEY` and lets you send from `onboarding@resend.dev` without verifying a domain.
+2. **Set up an SMTP provider for sign-in emails.** Use [Brevo](https://www.brevo.com) (free, 300 emails/day) or any provider where you can verify a sender. **Don't use a Gmail/Yahoo address as the sender** — modern DMARC policies will block delivery. Use a custom domain you own.
 3. **Set `SUPER_ADMIN_EMAILS`** (and `NEXT_PUBLIC_SUPER_ADMIN_EMAILS`) to your own email address. Redeploy.
 4. **Visit `https://your-project.vercel.app/admin`**. You'll see a yellow banner: **Initialize Database**. Click it — the schema runs in your Supabase project automatically.
-5. **Sign in** with your email — you'll get a magic-link in your inbox. Done.
+5. **Sign in** — magic link arrives in your inbox.
 
 You're now ready to create events and invite attendees.
 
