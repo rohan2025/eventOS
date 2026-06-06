@@ -1,9 +1,9 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "eventOS — better intros, automatically",
+  title: "eventOS — AI matchmaking for in person events",
   description:
-    "Email every attendee their top 5 matches before the networking session starts.",
+    "Drop a guest list. eventOS emails every attendee their top 5 matches before the networking starts.",
 };
 
 const REPO_URL = "https://github.com/rohan2025/eventOS";
@@ -34,13 +34,17 @@ export default function Home() {
       {/* Hero */}
       <section className="pt-36 sm:pt-44 pb-16 px-6">
         <div className="max-w-3xl mx-auto text-center">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#0a0a0a]/45 mb-5">
+            AI matchmaking for in person events
+          </p>
           <h1 className="text-5xl sm:text-7xl font-bold tracking-tight leading-[1.02] mb-6">
-            Better intros.
+            Every attendee gets
             <br />
-            <span className="text-[#facc15]">Automatically.</span>
+            <span className="text-[#facc15]">their top 5 matches.</span>
           </h1>
-          <p className="text-lg text-[#0a0a0a]/60 max-w-md mx-auto mb-10">
-            Every attendee gets their top 5 matches by email, before the networking starts.
+          <p className="text-lg text-[#0a0a0a]/60 max-w-lg mx-auto mb-10">
+            Drop a guest list. eventOS scores every pair, then emails each person their best intros
+            before the networking starts.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <a
