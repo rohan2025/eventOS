@@ -6,15 +6,18 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 
-// Config from env. Both vars are optional:
-//  - If ALLOWED_DOMAIN is empty, any signed-in Google account can pass.
-//  - If SUPER_ADMIN_EMAILS is empty, only the `admins` DB table grants
-//    super-admin; all other signed-in users are read-only viewers.
+// Config from env. All optional:
+//  - ALLOWED_DOMAIN: restrict sign-in to one workspace domain (empty = any)
+//  - SUPER_ADMIN_EMAILS: env-configured super admins (empty = DB-managed only)
+//  - GOOGLE_OAUTH_ENABLED: show the Google sign-in button (requires Google
+//    OAuth set up in Supabase). Magic-link is always available.
 const ALLOWED_DOMAIN = (process.env.NEXT_PUBLIC_ALLOWED_ADMIN_DOMAIN || "").toLowerCase().trim();
 const SUPER_ADMIN_EMAILS = (process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAILS || "")
   .split(",")
   .map((e) => e.trim().toLowerCase())
   .filter(Boolean);
+const GOOGLE_OAUTH_ENABLED =
+  (process.env.NEXT_PUBLIC_GOOGLE_OAUTH_ENABLED || "").toLowerCase() === "true";
 
 export type AdminRole = "super_admin" | "viewer";
 
@@ -41,6 +44,24 @@ export default function AdminLayout({
   const [user, setUser] = useState<AdminUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  // Magic-link sign-in state
+  const [magicEmail, setMagicEmail] = useState("");
+  const [magicLinkSent, setMagicLinkSent] = useState(false);
+  const [sendingMagicLink, setSendingMagicLink] = useState(false);
+
+  // Setup banner state — true when the DB has not yet been initialized
+  const [setupNeeded, setSetupNeeded] = useState<boolean | null>(null);
+  const [runningSetup, setRunningSetup] = useState(false);
+  const [setupError, setSetupError] = useState("");
+
+  useEffect(() => {
+    // Check whether the DB has been initialized — drives the setup banner.
+    fetch("/api/init")
+      .then((r) => r.json())
+      .then((d) => setSetupNeeded(!d.initialized))
+      .catch(() => setSetupNeeded(null));
+  }, []);
 
   useEffect(() => {
     checkSession();
@@ -139,6 +160,54 @@ export default function AdminLayout({
     }
   }
 
+  async function handleMagicLink(e: React.FormEvent) {
+    e.preventDefault();
+    if (!magicEmail.trim()) return;
+    setError("");
+    setSendingMagicLink(true);
+
+    if (ALLOWED_DOMAIN) {
+      const domain = magicEmail.split("@")[1]?.toLowerCase();
+      if (domain !== ALLOWED_DOMAIN) {
+        setError(`Only @${ALLOWED_DOMAIN} accounts can sign in.`);
+        setSendingMagicLink(false);
+        return;
+      }
+    }
+
+    const { error: authError } = await supabase.auth.signInWithOtp({
+      email: magicEmail.trim(),
+      options: {
+        emailRedirectTo: `${window.location.origin}/admin`,
+      },
+    });
+
+    setSendingMagicLink(false);
+    if (authError) {
+      setError(authError.message);
+    } else {
+      setMagicLinkSent(true);
+    }
+  }
+
+  async function handleRunSetup() {
+    setSetupError("");
+    setRunningSetup(true);
+    try {
+      const res = await fetch("/api/init", { method: "POST" });
+      const data = await res.json();
+      if (!res.ok) {
+        setSetupError(data.error || "Setup failed");
+      } else {
+        setSetupNeeded(false);
+      }
+    } catch (err) {
+      setSetupError(err instanceof Error ? err.message : "Setup failed");
+    } finally {
+      setRunningSetup(false);
+    }
+  }
+
   async function handleSignOut() {
     await supabase.auth.signOut();
     setUser(null);
@@ -173,19 +242,95 @@ export default function AdminLayout({
               Sign in to manage events
             </p>
           </div>
+
+          {/* Setup banner — shown when the database schema isn't installed yet */}
+          {setupNeeded === true && (
+            <div className="mb-4 bg-[#facc15]/15 border border-[#facc15]/40 rounded-2xl p-5">
+              <p className="text-sm font-semibold text-[#0a0a0a] mb-1">
+                Welcome — one more step
+              </p>
+              <p className="text-xs text-[#0a0a0a]/70 mb-3 leading-relaxed">
+                Your database hasn&apos;t been set up yet. Click below to create
+                the tables (events, profiles, matches, etc.). This is safe to
+                run once and only works on an empty database.
+              </p>
+              <button
+                onClick={handleRunSetup}
+                disabled={runningSetup}
+                className="w-full py-2.5 bg-[#0a0a0a] text-[#facc15] rounded-xl text-sm font-semibold hover:bg-[#262626] transition-colors disabled:opacity-50"
+              >
+                {runningSetup ? "Setting up…" : "Initialize Database"}
+              </button>
+              {setupError && (
+                <p className="mt-2 text-xs text-red-600">{setupError}</p>
+              )}
+            </div>
+          )}
+
           <div className="bg-[#ffffff] rounded-2xl border border-[#0a0a0a]/10 p-6 space-y-4">
-            <button
-              onClick={handleGoogleLogin}
-              className="w-full flex items-center justify-center gap-3 py-3 px-4 bg-[#ffffff] border border-[#0a0a0a]/15 rounded-xl text-sm font-medium text-[#000000] hover:bg-[#ffffff] transition-colors"
-            >
-              <svg width="18" height="18" viewBox="0 0 48 48">
-                <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-                <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-                <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-                <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-              </svg>
-              Sign in with Google
-            </button>
+            {magicLinkSent ? (
+              <div className="text-center py-4">
+                <p className="text-sm font-medium text-[#0a0a0a] mb-1">
+                  Check your inbox
+                </p>
+                <p className="text-xs text-[#0a0a0a]/60">
+                  We sent a sign-in link to <strong>{magicEmail}</strong>.
+                </p>
+                <button
+                  onClick={() => {
+                    setMagicLinkSent(false);
+                    setMagicEmail("");
+                  }}
+                  className="mt-4 text-[11px] text-[#0a0a0a]/50 hover:text-[#0a0a0a] transition-colors"
+                >
+                  Use a different email
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleMagicLink} className="space-y-3">
+                <input
+                  type="email"
+                  required
+                  value={magicEmail}
+                  onChange={(e) => setMagicEmail(e.target.value)}
+                  placeholder={ALLOWED_DOMAIN ? `you@${ALLOWED_DOMAIN}` : "you@example.com"}
+                  disabled={sendingMagicLink}
+                  className="w-full px-4 py-3 rounded-xl border border-[#0a0a0a]/15 text-sm bg-[#ffffff] placeholder:text-[#0a0a0a]/40 focus:outline-none focus:border-[#0a0a0a]/40 transition-colors disabled:opacity-50"
+                />
+                <button
+                  type="submit"
+                  disabled={sendingMagicLink || !magicEmail.trim()}
+                  className="w-full py-3 px-4 bg-[#0a0a0a] text-[#facc15] rounded-xl text-sm font-semibold hover:bg-[#262626] transition-colors disabled:opacity-50"
+                >
+                  {sendingMagicLink ? "Sending…" : "Email me a sign-in link"}
+                </button>
+              </form>
+            )}
+
+            {GOOGLE_OAUTH_ENABLED && !magicLinkSent && (
+              <>
+                <div className="flex items-center gap-3">
+                  <span className="flex-1 h-px bg-[#0a0a0a]/10" />
+                  <span className="text-[10px] uppercase tracking-wider text-[#0a0a0a]/40">
+                    or
+                  </span>
+                  <span className="flex-1 h-px bg-[#0a0a0a]/10" />
+                </div>
+                <button
+                  onClick={handleGoogleLogin}
+                  className="w-full flex items-center justify-center gap-3 py-3 px-4 bg-[#ffffff] border border-[#0a0a0a]/15 rounded-xl text-sm font-medium text-[#000000] hover:bg-[#fafafa] transition-colors"
+                >
+                  <svg width="18" height="18" viewBox="0 0 48 48">
+                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                  </svg>
+                  Sign in with Google
+                </button>
+              </>
+            )}
+
             {ALLOWED_DOMAIN && (
               <p className="text-[11px] text-center text-[#0a0a0a]/50">
                 Only @{ALLOWED_DOMAIN} accounts can access this dashboard

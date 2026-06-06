@@ -1,19 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSupabaseAdmin, verifySuperAdmin } from "@/lib/admin-auth";
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const nodemailer = require("nodemailer");
-
-function getTransporter() {
-  return nodemailer.createTransport({
-    host: "smtp-relay.brevo.com",
-    port: 587,
-    secure: false,
-    auth: {
-      user: process.env.BREVO_SMTP_USER!,
-      pass: process.env.BREVO_SMTP_PASS!,
-    },
-  });
-}
+import { sendEmail } from "@/lib/email";
 
 interface Profile {
   email: string;
@@ -161,8 +148,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Event not found" }, { status: 404 });
   }
 
-  const transporter = getTransporter();
-
   // Get profiles ONLY for this event
   const { data: profiles } = await supabaseAdmin
     .from("profiles")
@@ -245,19 +230,15 @@ export async function POST(request: Request) {
     const episodes = (event.podcast_episodes as PodcastEpisode[] | null) || [];
     const html = buildEmailHtml(recipient.name, event.name, enrichedMatches, episodes);
 
-    try {
-      const fromName = process.env.EMAIL_FROM_NAME || "eventOS";
-      const fromAddress = process.env.EMAIL_FROM_ADDRESS || process.env.BREVO_SMTP_USER || "noreply@example.com";
-      await transporter.sendMail({
-        from: `"${fromName}" <${fromAddress}>`,
-        to: profileEmail,
-        subject: `Your MatchUp Results | ${event.name}`,
-        html,
-      });
+    const sendResult = await sendEmail({
+      to: profileEmail,
+      subject: `Your MatchUp Results | ${event.name}`,
+      html,
+    });
+    if (sendResult.ok) {
       results.push({ email: profileEmail, status: "sent", matchCount: enrichedMatches.length });
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Unknown error";
-      results.push({ email: profileEmail, status: `error: ${message}`, matchCount: 0 });
+    } else {
+      results.push({ email: profileEmail, status: `error: ${sendResult.error}`, matchCount: 0 });
     }
   }
 

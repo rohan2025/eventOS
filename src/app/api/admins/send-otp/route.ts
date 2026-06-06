@@ -1,20 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSupabaseAdmin, verifySuperAdmin } from "@/lib/admin-auth";
-
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const nodemailer = require("nodemailer");
-
-function getTransporter() {
-  return nodemailer.createTransport({
-    host: "smtp-relay.brevo.com",
-    port: 587,
-    secure: false,
-    auth: {
-      user: process.env.BREVO_SMTP_USER!,
-      pass: process.env.BREVO_SMTP_PASS!,
-    },
-  });
-}
+import { sendEmail } from "@/lib/email";
 
 // POST /api/admins/send-otp — send verification code to the email being added
 export async function POST(request: Request) {
@@ -62,15 +48,11 @@ export async function POST(request: Request) {
   }
 
   // Send OTP email
-  try {
-    const transporter = getTransporter();
-    const fromName = process.env.EMAIL_FROM_NAME || "eventOS";
-    const fromAddress = process.env.EMAIL_FROM_ADDRESS || process.env.BREVO_SMTP_USER || "noreply@example.com";
-    await transporter.sendMail({
-      from: `"${fromName}" <${fromAddress}>`,
-      to: email.toLowerCase(),
-      subject: `Admin Access Verification — ${fromName}`,
-      html: `
+  const fromName = process.env.EMAIL_FROM_NAME || "eventOS";
+  const result = await sendEmail({
+    to: email.toLowerCase(),
+    subject: `Admin Access Verification — ${fromName}`,
+    html: `
 <!DOCTYPE html>
 <html>
 <body style="margin: 0; padding: 0; background-color: #ffffff; font-family: 'Inter', -apple-system, sans-serif;">
@@ -95,10 +77,10 @@ export async function POST(request: Request) {
   </div>
 </body>
 </html>`,
-    });
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Unknown error";
-    return NextResponse.json({ error: `Failed to send OTP: ${message}` }, { status: 500 });
+  });
+
+  if (!result.ok) {
+    return NextResponse.json({ error: `Failed to send OTP: ${result.error}` }, { status: 500 });
   }
 
   return NextResponse.json({ sent: true, email: email.toLowerCase() });
